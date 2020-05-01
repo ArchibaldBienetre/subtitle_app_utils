@@ -2,7 +2,7 @@ package org.example.subtitles
 
 import java.time.LocalTime
 
-class SubtitleEntry {
+class SubtitleEntry(text: String = "") {
 
     /**
      * 0-based index of the subtitle entry
@@ -20,7 +20,7 @@ class SubtitleEntry {
     var toTimestamp: LocalTime = LocalTime.of(0, 0, 0, 0)
 
     /**
-     * The actual subtitle
+     * The actual subtitle text (text lines as list)
      */
-    var text: String = ""
+    var text: List<String> = text.lines()
 }
