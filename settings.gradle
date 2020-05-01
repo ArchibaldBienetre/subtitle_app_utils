@@ -1,4 +1,4 @@
-rootProject.name = 'archibaldbienetre_simple_scheduler'
+rootProject.name = 'subtitle_app_utils'
 
 
 enableFeaturePreview('GRADLE_METADATA')
