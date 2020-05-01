@@ -64,15 +64,10 @@ kotlin {
     // RG: I learned how to do this here: https://medium.com/@preslavrachev/kotlin-basics-create-executable-kotlin-jars-using-gradle-d17e9a8384b9
     jvmJar {
         manifest {
-            attributes 'Main-Class': 'sample.MainKt'
         }
-        // This line of code recursively collects and copies all of a project's files
-        // and adds them to the JAR itself. One can extend this task, to skip certain
-        // files or particular types at will
-//         from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-         from { configurations.kotlinCompilerClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+        // fat jar
+        from { configurations.kotlinCompilerClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     }
 }
 
-// logger.log(LogLevel.ERROR, "###### Configurations: ${configurations}")
 
