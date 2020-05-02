@@ -84,7 +84,7 @@ task jacocoTestReport(type: JacocoReport) {
     }
 
     sourceDirectories.setFrom(files([
-            "${project.projectDir}/src/jvmMain/kotlin"
+            fileTree(dir: "${buildDir}/src/*Main/**")
     ]))
     classDirectories.setFrom(files([
             fileTree(dir: "${buildDir}/classes", excludes: ['**/test/**'])
@@ -110,7 +110,7 @@ task jacocoTestCoverageVerification(type: JacocoCoverageVerification) {
     }
 
     sourceDirectories.setFrom(files([
-            "${project.projectDir}/src/jvmMain/kotlin"
+            fileTree(dir: "${buildDir}/src/*Main/**")
     ]))
     classDirectories.setFrom(files([
             fileTree(dir: "${buildDir}/classes", excludes: ['**/test/**'])
