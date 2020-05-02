@@ -37,6 +37,7 @@ kotlin {
         jvmMain {
             dependencies {
                 implementation kotlin('stdlib-jdk8')
+                implementation group: 'com.google.guava', name: 'guava', version: '29.0-android'
             }
         }
         jvmTest {

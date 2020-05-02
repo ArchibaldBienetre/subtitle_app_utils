@@ -1,7 +1,10 @@
 package org.example.subtitles
 
+import com.google.common.annotations.VisibleForTesting
+
 open class Observable<E> {
 
+    @VisibleForTesting
     protected val observers: MutableList<Observer<E>> = ArrayList()
 
 
