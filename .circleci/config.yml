@@ -25,7 +25,7 @@ jobs:
           command: |
             ./gradlew clean jvmTest --info --stacktrace
       - run:
-          name: 'Copy test artifacts elsewhere'
+          name: 'Copy JaCoCo test artifacts'
           command: |
             # JaCoCo ...
             #   workspace/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
@@ -34,13 +34,18 @@ jobs:
 
             # ... XML
             mkdir -p "$HOME_DIR/test-results/jacoco"
-            cp "$WORKSPACE_DIR/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml" "$HOME_DIR/test-results/jacoco"
+            if [[ -f "$WORKSPACE_DIR/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml" ]]; then
+              cp "$WORKSPACE_DIR/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml" "$HOME_DIR/test-results/jacoco"
+            fi
 
             # ...HTML
             mkdir -p "$HOME_DIR/test-results/jacoco/html"
-            cp -R "$WORKSPACE_DIR/build/reports/jacoco/jacocoTestReport/html" "$HOME_DIR/test-results/jacoco"
-
-
+            if [[ -d "$WORKSPACE_DIR/build/reports/jacoco/jacocoTestReport/html" ]]; then
+              cp -R "$WORKSPACE_DIR/build/reports/jacoco/jacocoTestReport/html" "$HOME_DIR/test-results/jacoco"
+            fi
+      - run:
+          name: 'Copy JUnit test results'
+          command: |
             # JUnit
             #   workspace/build/test-results/jvmTest/TEST-*.xml
             #   workspace/build/reports/tests/jvmTest
@@ -48,12 +53,15 @@ jobs:
 
             # ... XML
             mkdir -p "$HOME_DIR/test-results/junit"
-            find "$WORKSPACE_DIR/build/test-results/"*Test -iname "*.xml" -exec cp {} "$HOME_DIR/test-results/junit" \;
-
+            if [[ -d "$WORKSPACE_DIR/build/test-results" ]]; then
+              find "$WORKSPACE_DIR/build/test-results/"*Test -iname "*.xml" -exec cp {} "$HOME_DIR/test-results/junit" \;
+            fi
             # ... HTML
             mkdir -p "$HOME_DIR/test-results/junit/html"
-            cp -R "$WORKSPACE_DIR/build/reports/tests/"* "$HOME_DIR/test-results/junit/html"
-
+            if [[ -d "$WORKSPACE_DIR/build/reports/tests" ]]; then
+              cp -R "$WORKSPACE_DIR/build/reports/tests/"* "$HOME_DIR/test-results/junit/html"
+            fi
+          when: always
       - store_artifacts:
           path: "$HOME_DIR/test-results"
       - store_test_results:
