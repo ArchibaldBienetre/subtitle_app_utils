@@ -60,6 +60,22 @@ class SubtitleEntrySrtConverterTest {
     }
 
     @Test
+    fun testFromSrtString2() {
+        val srtString = "12\r" +
+                "01:02:50,209 --> 01:02:59,583\r" +
+                "- Je double : 200 sur l'escorte.\r" +
+                "- Vous allez perdre.\r"
+        val sut = SubtitleEntrySrtConverter()
+
+        val actual = sut.fromSrtString(srtString)
+
+        assertEquals(11, actual.index)
+        assertEquals(LocalTime.of(1, 2, 50, 209_000_000), actual.fromTimestamp)
+        assertEquals(LocalTime.of(1, 2, 59, 583_000_000), actual.toTimestamp)
+        assertEquals(listOf("- Je double : 200 sur l'escorte.", "- Vous allez perdre."), actual.textLines)
+    }
+
+    @Test
     fun testFromSrtString_nullEntry() {
         val srtString = "1\r\n" +
                 "00:00:00,000 --> 00:00:00,000\r\n" +
@@ -73,7 +89,7 @@ class SubtitleEntrySrtConverterTest {
         val zeroTime = LocalTime.of(0, 0, 0, 0)
         assertEquals(zeroTime, actual.fromTimestamp)
         assertEquals(zeroTime, actual.toTimestamp)
-        assertEquals(listOf(""), actual.textLines)
+        assertEquals(emptyList(), actual.textLines)
     }
 
     @Test

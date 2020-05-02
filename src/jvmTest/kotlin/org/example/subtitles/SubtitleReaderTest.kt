@@ -79,6 +79,6 @@ class SubtitleReaderTest {
         assertEquals(converter.fromSrtString("11\n00:02:50,209 --> 00:02:53,583\n- Je double : 200 sur l'escorte.\n- Vous allez perdre.\n\n"), sequenceEntries.get(2))
         assertEquals(converter.fromSrtString("29\n00:03:28,574 --> 00:03:31,490\n- Je roule pas à 180 pour m'amuser !\n- Oh !\n\n"), sequenceEntries.get(3))
         assertEquals(converter.fromSrtString("1370\n01:42:10,779 --> 01:42:12,963\n...je l'ai enfin retrouvé.\n\n"), sequenceEntries.get(4))
-//        assertEquals(converter.fromSrtString("1371\n01:42:14,312 --> 01:42:15,962\nEmbrassez-la pour moi.\n\n", sequenceEntries.get(5))
+        assertEquals(converter.fromSrtString("1371\n01:42:14,312 --> 01:42:15,962\nEmbrassez-la pour moi.\n\n"), sequenceEntries.get(5))
     }
 }

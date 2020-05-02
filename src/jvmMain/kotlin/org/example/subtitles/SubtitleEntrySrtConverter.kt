@@ -1,5 +1,6 @@
 package org.example.subtitles
 
+import com.google.common.base.Strings
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -29,12 +30,16 @@ class SubtitleEntrySrtConverter {
             val indexLine = lines.get(0)
             val timeStampsLine = lines.get(1)
             val timeStampsLineSplits = timeStampsLine.split(" --> ")
-            val textLines = lines.subList(2, lines.size - 2)
+            var textLines = lines.subList(2, lines.size - 1)
+
 
             val entry = SubtitleEntry()
             entry.index = Integer.valueOf(indexLine) - 1
             entry.fromTimestamp = LocalTime.parse(timeStampsLineSplits.get(0), dateTimeFormatter)
             entry.toTimestamp = LocalTime.parse(timeStampsLineSplits.get(1), dateTimeFormatter)
+            while (textLines.isNotEmpty() && Strings.isNullOrEmpty(textLines.last())) {
+                textLines = textLines.subList(0, textLines.size - 1)
+            }
             entry.textLines = textLines
 
             return entry
