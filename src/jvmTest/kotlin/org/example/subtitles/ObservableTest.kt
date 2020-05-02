@@ -2,9 +2,26 @@ package org.example.subtitles
 
 import org.junit.Test
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.test.assertEquals
 
 class ObservableTest {
+
+    open class TestObserver : Observer<Int> {
+
+        val actualValueHolder: AtomicInteger = AtomicInteger()
+        val exceptionValueHolder: AtomicInteger = AtomicInteger()
+        val exceptionHolder: AtomicReference<Exception> = AtomicReference()
+
+        override fun update(element: Int) {
+            actualValueHolder.set(element)
+        }
+
+        override fun onFailure(element: Int, exception: Exception) {
+            exceptionValueHolder.set(element)
+            exceptionHolder.set(exception)
+        }
+    }
 
     @Test
     fun testAddObserver() {
@@ -64,43 +81,57 @@ class ObservableTest {
     @Test
     fun testNotifyObservers_singletonList() {
         val sut = Observable<Int>()
-        val actualValueHolder = AtomicInteger()
-        val observer: Observer<Int> = object : Observer<Int> {
-
-            override fun update(element: Int) {
-                actualValueHolder.set(element)
-            }
-        }
+        val observer = TestObserver()
         sut.addObserver(observer)
 
         sut.notifyObservers(42)
 
-        assertEquals(42, actualValueHolder.get())
+        assertEquals(42, observer.actualValueHolder.get())
+        assertEquals(0, observer.exceptionValueHolder.get())
+        assertEquals(null, observer.exceptionHolder.get())
     }
 
 
     @Test
     fun testNotifyObservers_multiplesList() {
         val sut = Observable<Int>()
-        val actualValueHolder1 = AtomicInteger()
-        val actualValueHolder2 = AtomicInteger()
-        val observer1: Observer<Int> = object : Observer<Int> {
-            override fun update(element: Int) {
-                actualValueHolder1.set(element)
-            }
-        }
-        val observer2: Observer<Int> = object : Observer<Int> {
-            override fun update(element: Int) {
-                actualValueHolder2.set(element)
-            }
-        }
+        val observer1 = TestObserver()
+        val observer2 = TestObserver()
         sut.addObserver(observer1)
         sut.addObserver(observer2)
 
         sut.notifyObservers(42)
 
-        assertEquals(42, actualValueHolder1.get())
-        assertEquals(42, actualValueHolder2.get())
+        assertEquals(42, observer1.actualValueHolder.get())
+        assertEquals(42, observer2.actualValueHolder.get())
+        assertEquals(0, observer1.exceptionValueHolder.get())
+        assertEquals(0, observer2.exceptionValueHolder.get())
+        assertEquals(null, observer1.exceptionHolder.get())
+        assertEquals(null, observer2.exceptionHolder.get())
     }
 
+
+    @Test
+    fun testNotifyObservers_throwingObserver() {
+        val sut = Observable<Int>()
+        val testException = RuntimeException("test exception")
+        val observer1Throwing = object : TestObserver() {
+            override fun update(element: Int) {
+                throw testException
+            }
+        }
+        val observer2 = TestObserver()
+        sut.addObserver(observer1Throwing)
+        sut.addObserver(observer2)
+
+        // should not fail!
+        sut.notifyObservers(42)
+
+        assertEquals(0, observer1Throwing.actualValueHolder.get())
+        assertEquals(42, observer2.actualValueHolder.get())
+        assertEquals(42, observer1Throwing.exceptionValueHolder.get())
+        assertEquals(0, observer2.exceptionValueHolder.get())
+        assertEquals(testException, observer1Throwing.exceptionHolder.get())
+        assertEquals(null, observer2.exceptionHolder.get())
+    }
 }

@@ -9,16 +9,20 @@ open class Observable<E> {
 
 
     fun addObserver(observer: Observer<E>) {
-        this.observers.add(observer)
+        observers.add(observer)
     }
 
     fun removeObserver(observer: Observer<E>) {
-        this.observers.remove(observer)
+        observers.remove(observer)
     }
 
     fun notifyObservers(element: E) {
         for (observer in observers) {
-            observer.update(element)
+            try {
+                observer.update(element)
+            } catch (e: Exception) {
+                observer.onFailure(element, e)
+            }
         }
     }
 }
