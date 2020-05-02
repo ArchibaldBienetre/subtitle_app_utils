@@ -72,9 +72,10 @@ jobs:
             fi
           when: always
       - store_artifacts:
-          path: "$HOME_DIR/test-results"
+          # variables don't work here
+          path: "/home/circleci/test-results"
       - store_test_results:
-          path: "$HOME_DIR/test-results"
+          path: "/home/circleci/test-results"
 
 
 workflows:
