@@ -1,8 +1,17 @@
 version: 2.1
 
+references:
+  home_dir: &home_dir "/home/circleci"
+  workspace_dir: &workspace_dir "/home/circleci/workspace"
+
 jobs:
   test:
+    working_directory: *workspace_dir
+    environment:
+      HOME_DIR: *home_dir
+      WORKSPACE_DIR: *workspace_dir
     docker:
+      # or, use an Android image? https://circleci.com/docs/2.0/circleci-images/#android
       - image: circleci/openjdk:8u252-buster
     steps:
       - checkout
@@ -14,7 +23,42 @@ jobs:
       - run:
           name: 'Run gradle-based tests'
           command: |
-            ./gradlew clean jvmTest
+            ./gradlew clean jvmTest --info --stacktrace
+      - run:
+          name: 'Copy test artifacts elsewhere'
+          command: |
+            # JaCoCo ...
+            #   workspace/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
+            #   workspace/build/reports/jacoco/jacocoTestReport/html
+            #   workspace/build/reports/jacoco/jacocoTestReport/html/...
+
+            # ... XML
+            mkdir -p "$HOME_DIR/test-results/jacoco"
+            cp "$WORKSPACE_DIR/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml" "$HOME_DIR/test-results/jacoco"
+
+            # ...HTML
+            mkdir -p "$HOME_DIR/test-results/jacoco/html"
+            cp -R "$WORKSPACE_DIR/build/reports/jacoco/jacocoTestReport/html" "$HOME_DIR/test-results/jacoco"
+
+
+            # JUnit
+            #   workspace/build/test-results/jvmTest/TEST-*.xml
+            #   workspace/build/reports/tests/jvmTest
+            #   workspace/build/reports/tests/jvmTest/index.html
+
+            # ... XML
+            mkdir -p "$HOME_DIR/test-results/junit"
+            find "$WORKSPACE_DIR/build/test-results/"*Test -iname "*.xml" -exec cp {} "$HOME_DIR/test-results/junit" \;
+
+            # ... HTML
+            mkdir -p "$HOME_DIR/test-results/junit/html"
+            cp -R "$WORKSPACE_DIR/build/reports/tests/"* "$HOME_DIR/test-results/junit/html"
+
+      - store_artifacts:
+          path: "$HOME_DIR/test-results"
+      - store_test_results:
+          path: "$HOME_DIR/test-results"
+
 
 workflows:
   version: 2
