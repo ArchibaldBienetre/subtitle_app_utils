@@ -1,0 +1,23 @@
+version: 2.1
+
+jobs:
+  test:
+    docker:
+      - image: circleci/openjdk:8u252-buster
+    steps:
+      - checkout
+      - run:
+          name: 'Check that a jar can be built'
+          command: |
+            ./gradlew clean jvmJar
+
+      - run:
+          name: 'Run gradle-based tests'
+          command: |
+            ./gradlew clean jvmTest
+
+workflows:
+  version: 2
+  run_tests:
+    jobs:
+      - test
