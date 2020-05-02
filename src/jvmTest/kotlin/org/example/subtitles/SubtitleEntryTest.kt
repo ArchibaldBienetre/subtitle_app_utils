@@ -15,7 +15,7 @@ class SubtitleEntryTest {
         assertEquals(0, sut.index)
         assertEquals(zeroTime, sut.fromTimestamp)
         assertEquals(zeroTime, sut.toTimestamp)
-        assertEquals(listOf(""), sut.text)
+        assertEquals(listOf(""), sut.textLines)
     }
 
     @Test
@@ -29,21 +29,21 @@ class SubtitleEntryTest {
         sut.index = expectedIndex
         sut.fromTimestamp = expectedFromTimestamp
         sut.toTimestamp = expectedToTimestamp
-        sut.text = expectedText
+        sut.textLines = expectedText
 
         assertEquals(expectedIndex, sut.index)
         assertEquals(expectedFromTimestamp, sut.fromTimestamp)
         assertEquals(expectedToTimestamp, sut.toTimestamp)
-        assertEquals(expectedText, sut.text)
+        assertEquals(expectedText, sut.textLines)
     }
 
     @Test
     fun testLineSplittingLF() {
         val expectedText = listOf("- Je double : 200 sur l'escorte.", "- Vous allez perdre.")
 
-        val sut = SubtitleEntry("- Je double : 200 sur l'escorte.\n- Vous allez perdre.")
+        val sut = SubtitleEntry.createFromString("- Je double : 200 sur l'escorte.\n- Vous allez perdre.")
 
-        assertEquals(expectedText, sut.text)
+        assertEquals(expectedText, sut.textLines)
     }
 
 
@@ -51,8 +51,8 @@ class SubtitleEntryTest {
     fun testLineSplittingCrlf() {
         val expectedText = listOf("- Je double : 200 sur l'escorte.", "- Vous allez perdre.")
 
-        val sut = SubtitleEntry("- Je double : 200 sur l'escorte.\r\n- Vous allez perdre.")
+        val sut = SubtitleEntry.createFromString("- Je double : 200 sur l'escorte.\r\n- Vous allez perdre.")
 
-        assertEquals(expectedText, sut.text)
+        assertEquals(expectedText, sut.textLines)
     }
 }

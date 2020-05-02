@@ -14,7 +14,7 @@ class SubtitleEntrySrtConverter {
             .append(" --> ")
             .append(entry.toTimestamp.format(dateTimeFormatter))
             .append(lineEnding)
-        entry.text.forEach {
+        entry.textLines.forEach {
             builder
                 .append(it)
                 .append(lineEnding)
@@ -35,7 +35,7 @@ class SubtitleEntrySrtConverter {
             entry.index = Integer.valueOf(indexLine) - 1
             entry.fromTimestamp = LocalTime.parse(timeStampsLineSplits.get(0), dateTimeFormatter)
             entry.toTimestamp = LocalTime.parse(timeStampsLineSplits.get(1), dateTimeFormatter)
-            entry.text = textLines
+            entry.textLines = textLines
 
             return entry
         } catch (e: IndexOutOfBoundsException) {

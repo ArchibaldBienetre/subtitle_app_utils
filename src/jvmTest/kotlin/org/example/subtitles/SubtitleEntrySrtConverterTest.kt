@@ -24,7 +24,7 @@ class SubtitleEntrySrtConverterTest {
 
     @Test
     fun testToSrtEntry() {
-        val entry = SubtitleEntry("- Je double : 200 sur l'escorte.\n- Vous allez perdre.")
+        val entry = SubtitleEntry.createFromString("- Je double : 200 sur l'escorte.\n- Vous allez perdre.")
         entry.index = 11
         entry.fromTimestamp = LocalTime.of(1, 2, 50, 209_000_000)
         entry.toTimestamp = LocalTime.of(1, 2, 59, 583_000_000)
@@ -56,7 +56,7 @@ class SubtitleEntrySrtConverterTest {
         assertEquals(11, actual.index)
         assertEquals(LocalTime.of(1, 2, 50, 209_000_000), actual.fromTimestamp)
         assertEquals(LocalTime.of(1, 2, 59, 583_000_000), actual.toTimestamp)
-        assertEquals(listOf("- Je double : 200 sur l'escorte.", "- Vous allez perdre."), actual.text)
+        assertEquals(listOf("- Je double : 200 sur l'escorte.", "- Vous allez perdre."), actual.textLines)
     }
 
     @Test
@@ -73,7 +73,7 @@ class SubtitleEntrySrtConverterTest {
         val zeroTime = LocalTime.of(0, 0, 0, 0)
         assertEquals(zeroTime, actual.fromTimestamp)
         assertEquals(zeroTime, actual.toTimestamp)
-        assertEquals(listOf(""), actual.text)
+        assertEquals(listOf(""), actual.textLines)
     }
 
     @Test
