@@ -1,0 +1,75 @@
+version: 2.1
+
+references:
+  home_dir: &home_dir "/home/circleci"
+  workspace_dir: &workspace_dir "/home/circleci/workspace"
+
+jobs:
+  test:
+    working_directory: *workspace_dir
+    environment:
+      HOME_DIR: *home_dir
+      WORKSPACE_DIR: *workspace_dir
+    docker:
+      - image: circleci/openjdk:11.0.7-jdk-buster
+    steps:
+      - checkout
+      - run:
+          name: 'Check that a jar can be built'
+          command: |
+            ./gradlew clean jvmJar
+
+      - run:
+          name: 'Run gradle-based tests'
+          command: |
+            ./gradlew clean jvmTest --info --stacktrace
+      - run:
+          name: 'Copy JaCoCo test artifacts'
+          command: |
+            # JaCoCo ...
+            #   workspace/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
+            #   workspace/build/reports/jacoco/jacocoTestReport/html
+            #   workspace/build/reports/jacoco/jacocoTestReport/html/...
+
+            # ... XML
+            mkdir -p "$HOME_DIR/test-results/jacoco"
+            if [[ -f "$WORKSPACE_DIR/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml" ]]; then
+              cp "$WORKSPACE_DIR/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml" "$HOME_DIR/test-results/jacoco"
+            fi
+
+            # ...HTML
+            mkdir -p "$HOME_DIR/test-results/jacoco/html"
+            if [[ -d "$WORKSPACE_DIR/build/reports/jacoco/jacocoTestReport/html" ]]; then
+              cp -R "$WORKSPACE_DIR/build/reports/jacoco/jacocoTestReport/html" "$HOME_DIR/test-results/jacoco"
+            fi
+      - run:
+          name: 'Copy JUnit test results'
+          command: |
+            # JUnit
+            #   workspace/build/test-results/jvmTest/TEST-*.xml
+            #   workspace/build/reports/tests/jvmTest
+            #   workspace/build/reports/tests/jvmTest/index.html
+
+            # ... XML
+            mkdir -p "$HOME_DIR/test-results/junit"
+            if [[ -d "$WORKSPACE_DIR/build/test-results" ]]; then
+              find "$WORKSPACE_DIR/build/test-results/"*Test -iname "*.xml" -exec cp {} "$HOME_DIR/test-results/junit" \;
+            fi
+            # ... HTML
+            mkdir -p "$HOME_DIR/test-results/junit/html"
+            if [[ -d "$WORKSPACE_DIR/build/reports/tests" ]]; then
+              cp -R "$WORKSPACE_DIR/build/reports/tests/"* "$HOME_DIR/test-results/junit/html"
+            fi
+          when: always
+      - store_artifacts:
+          # variables don't work here
+          path: "/home/circleci/test-results"
+      - store_test_results:
+          path: "/home/circleci/test-results"
+
+
+workflows:
+  version: 2
+  run_tests:
+    jobs:
+      - test
