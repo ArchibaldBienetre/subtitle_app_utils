@@ -8,6 +8,7 @@ group 'com.example'
 version '0.0.1'
 
 apply plugin: 'maven-publish'
+apply plugin: 'jacoco'
 
 kotlin {
     jvm()
@@ -71,4 +72,56 @@ kotlin {
     }
 }
 
+// ### Test Coverage + Coverage Verification ###
+// inspired by https://stackoverflow.com/q/45464138/1143126
+// and https://stackoverflow.com/a/49161924/1143126
 
+task jacocoTestReport(type: JacocoReport) {
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    sourceDirectories.setFrom(files([
+            "${project.projectDir}/src/jvmMain/kotlin"
+    ]))
+    classDirectories.setFrom(files([
+            fileTree(dir: "${buildDir}/classes", excludes: ['**/test/**'])
+    ]))
+    executionData.setFrom(fileTree(dir: "$buildDir", includes: [
+            "jacoco/*Test.exec"
+    ]))
+}
+
+
+task jacocoTestCoverageVerification(type: JacocoCoverageVerification) {
+    violationRules {
+        rule {
+            element = 'CLASS'
+            // whitelist - not recognized properly by JaCoCo
+            excludes = ['*.DefaultImpls', '*.Companion', '*.Factory']
+            includes = ['org.example.*']
+
+            limit {
+                minimum = 0.88
+            }
+        }
+    }
+
+    sourceDirectories.setFrom(files([
+            "${project.projectDir}/src/jvmMain/kotlin"
+    ]))
+    classDirectories.setFrom(files([
+            fileTree(dir: "${buildDir}/classes", excludes: ['**/test/**'])
+    ]))
+    executionData.setFrom(fileTree(dir: "$buildDir", includes: [
+            "jacoco/*Test.exec"
+    ]))
+}
+
+tasks.withType(Test).each {
+    it.finalizedBy jacocoTestReport
+    it.finalizedBy jacocoTestCoverageVerification
+}
+jacocoTestCoverageVerification.dependsOn jacocoTestReport
