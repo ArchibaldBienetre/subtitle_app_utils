@@ -5,5 +5,4 @@ import java.util.function.Consumer
 
 interface SubtitleReader {
     fun streamSubtitleEntries(exceptionHandler: Consumer<Exception> = Consumer { }): Sequence<SubtitleEntry>
-    fun readNextSubtitleEntry(exceptionHandler: Consumer<Exception>): SubtitleEntry?
 }

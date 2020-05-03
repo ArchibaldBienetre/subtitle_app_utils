@@ -25,7 +25,7 @@ class SubtitleReaderImpl(@WillClose inputStream: InputStream, private val conver
         }
     }
 
-    override fun readNextSubtitleEntry(exceptionHandler: Consumer<Exception>): SubtitleEntry? {
+    private fun readNextSubtitleEntry(exceptionHandler: Consumer<Exception>): SubtitleEntry? {
         try {
             val currentEntryStrings: MutableList<String> = ArrayList()
             var started = false
