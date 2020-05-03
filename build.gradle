@@ -157,3 +157,13 @@ java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
+
+jvmTest {
+    // to still run LearningTest classes, add "-PdoRunLearningTests" to your gradle command
+    if (!project.hasProperty('doRunLearningTests')) {
+        filter {
+            excludeTestsMatching "*LearningTest"
+        }
+    }
+}
+
