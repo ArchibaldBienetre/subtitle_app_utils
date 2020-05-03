@@ -18,29 +18,32 @@ class SubtitleReader(@WillClose inputStream: InputStream, private val converter:
         return sequence {
             outerObject.use {
                 while (bufferedReader.ready()) {
-                    val currentEntryStrings: MutableList<String> = ArrayList()
-                    var started = false
-                    do {
-                        val currentLine = bufferedReader.readLine()
-
-                        // ignore leading empty lines
-                        if (!started && !Strings.isNullOrEmpty(currentLine)) {
-                            started = true
-                        }
-                        if (started) {
-                            currentEntryStrings.add(currentLine)
-                        }
-                    } while (bufferedReader.ready() && !Strings.isNullOrEmpty(currentLine))
-
-                    if (currentEntryStrings.asSequence().all { Strings.isNullOrEmpty(it) }) {
-                        continue;
-                    }
-                    val srtString = currentEntryStrings.joinToString("\n", postfix = "\n")
-                    val entry = converter.fromString(srtString)
-                    yield(entry)
+                    readNextSubtitleEntry()?.also { yield(it) }
                 }
             }
         }
+    }
+
+    private fun readNextSubtitleEntry(): SubtitleEntry? {
+        val currentEntryStrings: MutableList<String> = ArrayList()
+        var started = false
+        do {
+            val currentLine = bufferedReader.readLine()
+
+            // ignore leading empty lines
+            if (!started && !Strings.isNullOrEmpty(currentLine)) {
+                started = true
+            }
+            if (started) {
+                currentEntryStrings.add(currentLine)
+            }
+        } while (bufferedReader.ready() && !Strings.isNullOrEmpty(currentLine))
+
+        if (currentEntryStrings.asSequence().all { Strings.isNullOrEmpty(it) }) {
+            return null
+        }
+        val srtString = currentEntryStrings.joinToString("\n", postfix = "\n")
+        return converter.fromString(srtString)
     }
 
     override fun close() {
