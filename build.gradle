@@ -101,7 +101,7 @@ task jacocoTestCoverageVerification(type: JacocoCoverageVerification) {
         rule {
             element = 'CLASS'
             // whitelist - not recognized properly by JaCoCo
-            excludes = ['*.DefaultImpls', '*.Companion', '*.Factory']
+            excludes = ['*.DefaultImpls', '*.Companion', '*.Factory', '*.1']
             includes = ['org.example.*']
 
             limit {
