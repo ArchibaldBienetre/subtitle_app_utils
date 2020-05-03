@@ -11,7 +11,7 @@ import kotlin.test.assertEquals
 
 class SubtitleWriterTest {
     @Test
-    fun testWriteSubtitleEntry_nullValue() {
+    fun writeSubtitleEntry_nullValue() {
         val testEntry = SubtitleEntry()
         val converter = SubtitleEntrySrtConverter()
         val expected: String = converter.toString(testEntry)
@@ -25,7 +25,7 @@ class SubtitleWriterTest {
     }
 
     @Test
-    fun testWriteSubtitleEntry() {
+    fun writeSubtitleEntry() {
         val converter = SubtitleEntrySrtConverter()
         val nl = SubtitleEntrySrtConverter.lineEnding
         val entryString1 = "1${nl}00:01:35,628 --> 00:01:36,654${nl}Dégage, toi.${nl}"
@@ -45,7 +45,7 @@ class SubtitleWriterTest {
     }
 
     @Test
-    fun testWriteSubtitleEntry_toFile() {
+    fun writeSubtitleEntry_toFile() {
         val converter = SubtitleEntrySrtConverter()
         val nl = SubtitleEntrySrtConverter.lineEnding
         val entryString1 = "1${nl}00:01:35,628 --> 00:01:36,654${nl}Dégage, toi.${nl}"

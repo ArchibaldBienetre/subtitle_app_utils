@@ -9,7 +9,7 @@ import kotlin.test.assertFailsWith
 class SubtitleEntrySrtConverterTest {
 
     @Test
-    fun testToSrtString_nullEntry() {
+    fun toString_nullEntry() {
         val entry = SubtitleEntry()
         val sut = SubtitleEntrySrtConverter()
 
@@ -24,7 +24,7 @@ class SubtitleEntrySrtConverterTest {
     }
 
     @Test
-    fun testToSrtEntry() {
+    fun toString_normalEntry() {
         val entry =
             SubtitleEntry.createFromString("- Je double : 200 sur l'escorte.\n- Vous allez perdre.")
         entry.index = 11
@@ -45,7 +45,7 @@ class SubtitleEntrySrtConverterTest {
 
 
     @Test
-    fun testFromSrtString() {
+    fun fromString_crlfLineEndings() {
         val srtString = "12\r\n" +
                 "01:02:50,209 --> 01:02:59,583\r\n" +
                 "- Je double : 200 sur l'escorte.\r\n" +
@@ -62,7 +62,7 @@ class SubtitleEntrySrtConverterTest {
     }
 
     @Test
-    fun testFromSrtString2() {
+    fun fromString_crLineEndings() {
         val srtString = "12\r" +
                 "01:02:50,209 --> 01:02:59,583\r" +
                 "- Je double : 200 sur l'escorte.\r" +
@@ -78,7 +78,7 @@ class SubtitleEntrySrtConverterTest {
     }
 
     @Test
-    fun testFromSrtString_nullEntry() {
+    fun fromString_nullEntry() {
         val srtString = "1\r\n" +
                 "00:00:00,000 --> 00:00:00,000\r\n" +
                 "\r\n" +
@@ -95,7 +95,7 @@ class SubtitleEntrySrtConverterTest {
     }
 
     @Test
-    fun testFromSrtString_invalidEntry_oneLine() {
+    fun fromString_invalidEntry_oneLine() {
         val srtString = "1 00:00:00,000 --> 00:00:00,000"
         val sut = SubtitleEntrySrtConverter()
 
@@ -105,7 +105,7 @@ class SubtitleEntrySrtConverterTest {
     }
 
     @Test
-    fun testFromSrtString_invalidEntry_invalidDateValue() {
+    fun fromString_invalidEntry_invalidDateValue() {
         val srtString = "1\r\n" +
                 "00:00:00,000 --> 00:00:99,000\r\n" +
                 "\r\n" +
@@ -119,7 +119,7 @@ class SubtitleEntrySrtConverterTest {
 
 
     @Test
-    fun testFromSrtString_invalidEntry_invalidDateLine() {
+    fun fromString_invalidEntry_invalidDateLine() {
         val srtString = "1\r\n" +
                 "00:00:00,000 wrong delimiter 00:00:00,000\r\n" +
                 "\r\n" +

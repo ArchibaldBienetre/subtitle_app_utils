@@ -24,7 +24,7 @@ class ObservableTest {
     }
 
     @Test
-    fun testAddObserver() {
+    fun addObserver() {
         val sut = object : Observable<Int>() {
             fun observerCount(): Int = observers.size
         }
@@ -44,7 +44,7 @@ class ObservableTest {
 
 
     @Test
-    fun testRemoveObserver() {
+    fun removeObserver() {
         val sut = object : Observable<Int>() {
             fun observerCount(): Int = observers.size
         }
@@ -73,7 +73,7 @@ class ObservableTest {
 
 
     @Test
-    fun testNotifyObservers_emptyList() {
+    fun notifyObservers_emptyList() {
         val sut = Observable<Int>()
 
         // assert it does not fail
@@ -82,7 +82,7 @@ class ObservableTest {
 
 
     @Test
-    fun testNotifyObservers_singletonList() {
+    fun notifyObservers_singletonList() {
         val sut = Observable<Int>()
         val observer = TestObserver()
         sut.addObserver(observer)
@@ -96,7 +96,7 @@ class ObservableTest {
 
 
     @Test
-    fun testNotifyObservers_multiplesList() {
+    fun notifyObservers_multiplesList() {
         val sut = Observable<Int>()
         val observer1 = TestObserver()
         val observer2 = TestObserver()
@@ -115,7 +115,7 @@ class ObservableTest {
 
 
     @Test
-    fun testNotifyObservers_throwingObserver() {
+    fun notifyObservers_throwingObserver() {
         val sut = Observable<Int>()
         val testException = RuntimeException("test exception")
         val observer1Throwing = object : TestObserver() {

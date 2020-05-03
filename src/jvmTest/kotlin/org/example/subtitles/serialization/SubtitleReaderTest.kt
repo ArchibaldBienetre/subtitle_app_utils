@@ -17,7 +17,7 @@ class SubtitleReaderTest {
 
 
     @Test
-    fun readTestSubtitlesEmpty() {
+    fun streamSubtitleEntries_empty() {
         val entriesStream = ByteArrayOutputStream()
         val emptyStream = ByteArrayInputStream(entriesStream.toByteArray())
         val sut = SubtitleReader(emptyStream, SubtitleEntrySrtConverter())
@@ -30,7 +30,7 @@ class SubtitleReaderTest {
     }
 
     @Test
-    fun readTestSubtitlesSingleEntry() {
+    fun streamSubtitleEntries() {
         val converter = SubtitleEntrySrtConverter()
         val entry = SubtitleEntry.createFromString("This is a two-line\nSubtitle!")
         entry.index = 42
@@ -49,7 +49,7 @@ class SubtitleReaderTest {
     }
 
     @Test
-    fun readTestSubtitlesSingleEntry_leadingNewlines() {
+    fun streamSubtitleEntries_leadingNewlines() {
         val converter = SubtitleEntrySrtConverter()
         val entry = SubtitleEntry.createFromString("This is a two-line\nSubtitle!")
         entry.index = 42
@@ -70,7 +70,7 @@ class SubtitleReaderTest {
 
 
     @Test
-    fun readTestSubtitlesSingleEntry_readException() {
+    fun streamSubtitleEntries_readException() {
         val entriesStream = ByteArrayOutputStream()
         entriesStream.writeBytes("intentionally illegal format".toByteArray())
         val inputStream = ByteArrayInputStream(entriesStream.toByteArray())
@@ -87,7 +87,7 @@ class SubtitleReaderTest {
     }
 
     @Test
-    fun readTestSubtitlesFromFile() {
+    fun streamSubtitleEntries_fromFile() {
         val testFile = File("src/jvmTest/resources/test_subtitles.srt")
         val inputStream = FileInputStream(testFile)
         val sut = SubtitleReader(inputStream, SubtitleEntrySrtConverter())
