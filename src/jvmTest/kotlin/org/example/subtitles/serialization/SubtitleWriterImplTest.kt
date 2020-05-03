@@ -9,14 +9,14 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import kotlin.test.assertEquals
 
-class SubtitleWriterTest {
+class SubtitleWriterImplTest {
     @Test
     fun writeSubtitleEntry_nullValue() {
         val testEntry = SubtitleEntry()
         val converter = SubtitleEntrySrtConverter()
         val expected: String = converter.entryToString(testEntry)
         val outputStream = ByteArrayOutputStream()
-        val sut = SubtitleWriter(outputStream, converter)
+        val sut = SubtitleWriterImpl(outputStream, converter)
 
         sut.writeSubtitleEntry(testEntry)
 
@@ -34,7 +34,7 @@ class SubtitleWriterTest {
         val testEntry1 = converter.stringToEntry(entryString1)
         val testEntry2 = converter.stringToEntry(entryString2)
         val outputStream = ByteArrayOutputStream()
-        val sut = SubtitleWriter(outputStream, converter)
+        val sut = SubtitleWriterImpl(outputStream, converter)
 
         sut.writeSubtitleEntry(testEntry1)
         sut.writeSubtitleEntry(testEntry2)
@@ -53,9 +53,9 @@ class SubtitleWriterTest {
             "29${nl}00:03:28,574 --> 00:03:31,490${nl}- Je roule pas à 180 pour m'amuser !${nl}- Oh !${nl}"
         val testEntry1 = converter.stringToEntry(entryString1)
         val testEntry2 = converter.stringToEntry(entryString2)
-        val outputFile = File.createTempFile(SubtitleWriterTest::class.simpleName, ".srt")
+        val outputFile = File.createTempFile(SubtitleWriterImplTest::class.simpleName, ".srt")
         val outputStream = FileOutputStream(outputFile)
-        val sut = SubtitleWriter(outputStream, converter)
+        val sut = SubtitleWriterImpl(outputStream, converter)
 
         sut.writeSubtitleEntry(testEntry1)
         sut.writeSubtitleEntry(testEntry2)
