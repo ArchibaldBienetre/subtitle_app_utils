@@ -14,18 +14,18 @@ class SubtitleReader(@WillClose inputStream: InputStream, private val converter:
     private val underlyingInputStream: InputStream = inputStream
     private val bufferedReader: BufferedReader = BufferedReader(InputStreamReader(inputStream))
 
-    fun streamSubtitleEntries(errorHandler: Consumer<Exception> = Consumer { }): Sequence<SubtitleEntry> {
+    fun streamSubtitleEntries(exceptionHandler: Consumer<Exception> = Consumer { }): Sequence<SubtitleEntry> {
         val outerObject = this
         return sequence {
             outerObject.use {
                 while (bufferedReader.ready()) {
-                    readNextSubtitleEntry(errorHandler)?.also { yield(it) }
+                    readNextSubtitleEntry(exceptionHandler)?.also { yield(it) }
                 }
             }
         }
     }
 
-    private fun readNextSubtitleEntry(errorHandler: Consumer<Exception>): SubtitleEntry? {
+    private fun readNextSubtitleEntry(exceptionHandler: Consumer<Exception>): SubtitleEntry? {
         try {
             val currentEntryStrings: MutableList<String> = ArrayList()
             var started = false
@@ -46,7 +46,7 @@ class SubtitleReader(@WillClose inputStream: InputStream, private val converter:
                 return converter.fromString(srtString)
             }
         } catch (e: Exception) {
-            errorHandler.accept(e)
+            exceptionHandler.accept(e)
         }
         return null
     }

@@ -70,7 +70,7 @@ class SubtitleReaderTest {
 
 
     @Test
-    fun readTestSubtitlesSingleEntry_readerror() {
+    fun readTestSubtitlesSingleEntry_readException() {
         val entriesStream = ByteArrayOutputStream()
         entriesStream.writeBytes("intentionally illegal format".toByteArray())
         val inputStream = ByteArrayInputStream(entriesStream.toByteArray())
