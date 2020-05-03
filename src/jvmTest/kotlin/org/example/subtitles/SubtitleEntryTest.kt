@@ -3,6 +3,7 @@ package org.example.subtitles
 import java.time.LocalTime
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotSame
 
 class SubtitleEntryTest {
 
@@ -54,5 +55,23 @@ class SubtitleEntryTest {
         val sut = SubtitleEntry.createFromString("- Je double : 200 sur l'escorte.\r\n- Vous allez perdre.")
 
         assertEquals(expectedText, sut.textLines)
+    }
+
+    @Test
+    fun copyOf() {
+        val expectedIndex = 11
+        val expectedFromTimestamp = LocalTime.of(1, 2, 50, 209)
+        val expectedToTimestamp = LocalTime.of(1, 2, 59, 583)
+        val expectedText = listOf("- Je double : 200 sur l'escorte.", "- Vous allez perdre.")
+        val entry = SubtitleEntry()
+        entry.index = expectedIndex
+        entry.fromTimestamp = expectedFromTimestamp
+        entry.toTimestamp = expectedToTimestamp
+        entry.textLines = expectedText
+
+        val actual = SubtitleEntry.copyOf(entry)
+
+        assertEquals(entry, actual)
+        assertNotSame(entry, actual)
     }
 }
