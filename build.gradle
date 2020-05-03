@@ -51,6 +51,8 @@ kotlin {
                 implementation kotlin('test')
                 implementation kotlin('test-junit')
                 implementation group: 'org.mockito', name: 'mockito-android', version: '3.3.10'
+                implementation group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.2'
+                implementation 'ch.qos.logback:logback-classic:1.0.13'
             }
         }
         jsMain {
