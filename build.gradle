@@ -107,11 +107,30 @@ task jacocoTestCoverageVerification(type: JacocoCoverageVerification) {
         rule {
             element = 'CLASS'
             // whitelist - not recognized properly by JaCoCo
-            excludes = ['*.DefaultImpls', '*.Companion', '*.Factory', '*.1']
+            excludes = ['*.DefaultImpls', '*.Companion', '*.Factory', '*.1', 'org.example.subtitles.modification.SubtitlesTransformer']
             includes = ['org.example.*']
 
             limit {
-                minimum = 0.90
+                minimum = 0.95
+            }
+        }
+
+        // ## the following have been covered by tests, but test coverage is not properly recognized ## //
+
+        rule {
+            element = 'CLASS'
+            includes = ['org.example.subtitles.modification.SubtitlesTransformer', '*.Factory']
+
+            limit {
+                minimum = 0.83
+            }
+        }
+        rule {
+            element = 'CLASS'
+            includes = ['org.example.subtitles.serialization.SubtitleReader.DefaultImpls']
+
+            limit {
+                minimum = 0.72
             }
         }
     }
