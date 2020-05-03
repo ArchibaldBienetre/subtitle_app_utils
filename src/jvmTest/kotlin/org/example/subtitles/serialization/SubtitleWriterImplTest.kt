@@ -20,7 +20,7 @@ class SubtitleWriterImplTest {
 
         sut.writeSubtitleEntry(testEntry)
 
-        val actual: String = outputStream.toString(StandardCharsets.UTF_8)
+        val actual: String = outputStream.toString(StandardCharsets.UTF_8.name())
         assertEquals(expected, actual)
     }
 
@@ -39,7 +39,7 @@ class SubtitleWriterImplTest {
         sut.writeSubtitleEntry(testEntry1)
         sut.writeSubtitleEntry(testEntry2)
 
-        val actual: String = outputStream.toString(StandardCharsets.UTF_8)
+        val actual: String = outputStream.toString(StandardCharsets.UTF_8.name())
         val expected = entryString1 + nl + entryString2 + nl
         assertEquals(expected, actual)
     }
@@ -61,7 +61,7 @@ class SubtitleWriterImplTest {
         sut.writeSubtitleEntry(testEntry2)
         outputStream.close()
 
-        val actual: String = Files.readString(outputFile.toPath(), StandardCharsets.UTF_8)
+        val actual: String = String(Files.readAllBytes(outputFile.toPath()))
         val expected = entryString1 + nl + entryString2 + nl
         assertEquals(expected, actual)
     }

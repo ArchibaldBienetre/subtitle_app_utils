@@ -37,7 +37,7 @@ class SubtitleReaderImplTest {
         entry.fromTimestamp = LocalTime.NOON
         entry.toTimestamp = LocalTime.NOON.plusSeconds(42)
         val entriesStream = ByteArrayOutputStream()
-        entriesStream.writeBytes(converter.entryToString(entry).toByteArray())
+        entriesStream.write(converter.entryToString(entry).toByteArray())
         val inputStream = ByteArrayInputStream(entriesStream.toByteArray())
         val sut = SubtitleReaderImpl(inputStream, SubtitleEntrySrtConverter())
 
@@ -56,8 +56,8 @@ class SubtitleReaderImplTest {
         entry.fromTimestamp = LocalTime.NOON
         entry.toTimestamp = LocalTime.NOON.plusSeconds(42)
         val entriesStream = ByteArrayOutputStream()
-        entriesStream.writeBytes("\n\r\n\r\r\n\n".toByteArray())
-        entriesStream.writeBytes(converter.entryToString(entry).toByteArray())
+        entriesStream.write("\n\r\n\r\r\n\n".toByteArray())
+        entriesStream.write(converter.entryToString(entry).toByteArray())
         val inputStream = ByteArrayInputStream(entriesStream.toByteArray())
         val sut = SubtitleReaderImpl(inputStream, SubtitleEntrySrtConverter())
 
@@ -72,7 +72,7 @@ class SubtitleReaderImplTest {
     @Test
     fun streamSubtitleEntries_readException() {
         val entriesStream = ByteArrayOutputStream()
-        entriesStream.writeBytes("intentionally illegal format".toByteArray())
+        entriesStream.write("intentionally illegal format".toByteArray())
         val inputStream = ByteArrayInputStream(entriesStream.toByteArray())
         val sut = SubtitleReaderImpl(inputStream, SubtitleEntrySrtConverter())
         val caughtException: AtomicReference<Exception> = AtomicReference()
