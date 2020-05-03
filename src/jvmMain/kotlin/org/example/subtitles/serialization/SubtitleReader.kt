@@ -1,13 +1,14 @@
-package org.example.subtitles
+package org.example.subtitles.serialization
 
 import com.google.common.base.Strings
+import org.example.subtitles.SubtitleEntry
 import java.io.BufferedReader
 import java.io.Closeable
 import java.io.InputStream
 import java.io.InputStreamReader
 import javax.annotation.WillClose
 
-class SubtitleReader(@WillClose inputStream: InputStream, private val converter: SubtitleEntrySrtConverter = SubtitleEntrySrtConverter()) :
+class SubtitleReader(@WillClose inputStream: InputStream, private val converter: SubtitleEntryConverter) :
     Closeable {
     private val underlyingInputStream: InputStream = inputStream
     private val bufferedReader: BufferedReader = BufferedReader(InputStreamReader(inputStream))
@@ -35,7 +36,7 @@ class SubtitleReader(@WillClose inputStream: InputStream, private val converter:
                         continue;
                     }
                     val srtString = currentEntryStrings.joinToString("\n", postfix = "\n")
-                    val entry = converter.fromSrtString(srtString)
+                    val entry = converter.fromString(srtString)
                     yield(entry)
                 }
             }

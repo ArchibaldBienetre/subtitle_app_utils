@@ -1,5 +1,6 @@
-package org.example.subtitles
+package org.example.subtitles.serialization
 
+import org.example.subtitles.SubtitleEntry
 import org.junit.Test
 import java.time.LocalTime
 import kotlin.test.assertEquals
@@ -12,7 +13,7 @@ class SubtitleEntrySrtConverterTest {
         val entry = SubtitleEntry()
         val sut = SubtitleEntrySrtConverter()
 
-        val actual = sut.toSrtString(entry)
+        val actual = sut.toString(entry)
 
         assertEquals(
             "1\r\n" +
@@ -24,13 +25,14 @@ class SubtitleEntrySrtConverterTest {
 
     @Test
     fun testToSrtEntry() {
-        val entry = SubtitleEntry.createFromString("- Je double : 200 sur l'escorte.\n- Vous allez perdre.")
+        val entry =
+            SubtitleEntry.createFromString("- Je double : 200 sur l'escorte.\n- Vous allez perdre.")
         entry.index = 11
         entry.fromTimestamp = LocalTime.of(1, 2, 50, 209_000_000)
         entry.toTimestamp = LocalTime.of(1, 2, 59, 583_000_000)
         val sut = SubtitleEntrySrtConverter()
 
-        val actual = sut.toSrtString(entry)
+        val actual = sut.toString(entry)
 
         assertEquals(
             "12\r\n" +
@@ -51,7 +53,7 @@ class SubtitleEntrySrtConverterTest {
                 "\r\n"
         val sut = SubtitleEntrySrtConverter()
 
-        val actual = sut.fromSrtString(srtString)
+        val actual = sut.fromString(srtString)
 
         assertEquals(11, actual.index)
         assertEquals(LocalTime.of(1, 2, 50, 209_000_000), actual.fromTimestamp)
@@ -67,7 +69,7 @@ class SubtitleEntrySrtConverterTest {
                 "- Vous allez perdre.\r"
         val sut = SubtitleEntrySrtConverter()
 
-        val actual = sut.fromSrtString(srtString)
+        val actual = sut.fromString(srtString)
 
         assertEquals(11, actual.index)
         assertEquals(LocalTime.of(1, 2, 50, 209_000_000), actual.fromTimestamp)
@@ -83,7 +85,7 @@ class SubtitleEntrySrtConverterTest {
                 "\r\n"
         val sut = SubtitleEntrySrtConverter()
 
-        val actual = sut.fromSrtString(srtString)
+        val actual = sut.fromString(srtString)
 
         assertEquals(0, actual.index)
         val zeroTime = LocalTime.of(0, 0, 0, 0)
@@ -98,7 +100,7 @@ class SubtitleEntrySrtConverterTest {
         val sut = SubtitleEntrySrtConverter()
 
         assertFailsWith(IllegalArgumentException::class) {
-            sut.fromSrtString(srtString)
+            sut.fromString(srtString)
         }
     }
 
@@ -111,7 +113,7 @@ class SubtitleEntrySrtConverterTest {
         val sut = SubtitleEntrySrtConverter()
 
         assertFailsWith(IllegalArgumentException::class) {
-            sut.fromSrtString(srtString)
+            sut.fromString(srtString)
         }
     }
 
@@ -125,7 +127,7 @@ class SubtitleEntrySrtConverterTest {
         val sut = SubtitleEntrySrtConverter()
 
         assertFailsWith(IllegalArgumentException::class) {
-            sut.fromSrtString(srtString)
+            sut.fromString(srtString)
         }
     }
 

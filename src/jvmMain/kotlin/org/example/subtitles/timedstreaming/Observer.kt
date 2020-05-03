@@ -1,4 +1,4 @@
-package org.example.subtitles
+package org.example.subtitles.timedstreaming
 
 interface Observer<E> {
     fun update(element: E)

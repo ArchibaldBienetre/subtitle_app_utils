@@ -1,4 +1,4 @@
-package org.example.subtitles
+package org.example.subtitles.timedstreaming
 
 import org.junit.Test
 import java.util.concurrent.atomic.AtomicInteger
@@ -28,7 +28,8 @@ class ObservableTest {
         val sut = object : Observable<Int>() {
             fun observerCount(): Int = observers.size
         }
-        val observer: Observer<Int> = object : Observer<Int> {
+        val observer: Observer<Int> = object :
+            Observer<Int> {
             override fun update(element: Int) {
                 // do nothing
             }
@@ -47,12 +48,14 @@ class ObservableTest {
         val sut = object : Observable<Int>() {
             fun observerCount(): Int = observers.size
         }
-        val observer1: Observer<Int> = object : Observer<Int> {
+        val observer1: Observer<Int> = object :
+            Observer<Int> {
             override fun update(element: Int) {
                 // do nothing
             }
         }
-        val observer2: Observer<Int> = object : Observer<Int> {
+        val observer2: Observer<Int> = object :
+            Observer<Int> {
             override fun update(element: Int) {
                 // do nothing
             }

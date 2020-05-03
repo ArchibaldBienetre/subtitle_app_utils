@@ -1,4 +1,4 @@
-package org.example.subtitles
+package org.example.subtitles.timedstreaming
 
 import com.google.common.annotations.VisibleForTesting
 
