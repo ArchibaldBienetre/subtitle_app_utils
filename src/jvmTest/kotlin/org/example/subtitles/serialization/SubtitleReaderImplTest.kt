@@ -13,14 +13,14 @@ import java.util.function.Consumer
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
-class SubtitleReaderTest {
+class SubtitleReaderImplTest {
 
 
     @Test
     fun streamSubtitleEntries_empty() {
         val entriesStream = ByteArrayOutputStream()
         val emptyStream = ByteArrayInputStream(entriesStream.toByteArray())
-        val sut = SubtitleReader(emptyStream, SubtitleEntrySrtConverter())
+        val sut = SubtitleReaderImpl(emptyStream, SubtitleEntrySrtConverter())
 
         val actual = sut.streamSubtitleEntries()
 
@@ -39,7 +39,7 @@ class SubtitleReaderTest {
         val entriesStream = ByteArrayOutputStream()
         entriesStream.writeBytes(converter.entryToString(entry).toByteArray())
         val inputStream = ByteArrayInputStream(entriesStream.toByteArray())
-        val sut = SubtitleReader(inputStream, SubtitleEntrySrtConverter())
+        val sut = SubtitleReaderImpl(inputStream, SubtitleEntrySrtConverter())
 
         val actual = sut.streamSubtitleEntries()
 
@@ -59,7 +59,7 @@ class SubtitleReaderTest {
         entriesStream.writeBytes("\n\r\n\r\r\n\n".toByteArray())
         entriesStream.writeBytes(converter.entryToString(entry).toByteArray())
         val inputStream = ByteArrayInputStream(entriesStream.toByteArray())
-        val sut = SubtitleReader(inputStream, SubtitleEntrySrtConverter())
+        val sut = SubtitleReaderImpl(inputStream, SubtitleEntrySrtConverter())
 
         val actual = sut.streamSubtitleEntries()
 
@@ -74,7 +74,7 @@ class SubtitleReaderTest {
         val entriesStream = ByteArrayOutputStream()
         entriesStream.writeBytes("intentionally illegal format".toByteArray())
         val inputStream = ByteArrayInputStream(entriesStream.toByteArray())
-        val sut = SubtitleReader(inputStream, SubtitleEntrySrtConverter())
+        val sut = SubtitleReaderImpl(inputStream, SubtitleEntrySrtConverter())
         val caughtException: AtomicReference<Exception> = AtomicReference()
         val errorHandler = Consumer(caughtException::set)
 
@@ -90,7 +90,7 @@ class SubtitleReaderTest {
     fun streamSubtitleEntries_fromFile() {
         val testFile = File("src/jvmTest/resources/test_subtitles.srt")
         val inputStream = FileInputStream(testFile)
-        val sut = SubtitleReader(inputStream, SubtitleEntrySrtConverter())
+        val sut = SubtitleReaderImpl(inputStream, SubtitleEntrySrtConverter())
 
         val actual = sut.streamSubtitleEntries()
 
