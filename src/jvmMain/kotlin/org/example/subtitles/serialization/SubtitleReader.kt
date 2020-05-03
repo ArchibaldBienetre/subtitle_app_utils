@@ -43,7 +43,7 @@ class SubtitleReader(@WillClose inputStream: InputStream, private val converter:
 
             if (!currentEntryStrings.asSequence().all { Strings.isNullOrEmpty(it) }) {
                 val srtString = currentEntryStrings.joinToString("\n", postfix = "\n")
-                return converter.fromString(srtString)
+                return converter.stringToEntry(srtString)
             }
         } catch (e: Exception) {
             exceptionHandler.accept(e)

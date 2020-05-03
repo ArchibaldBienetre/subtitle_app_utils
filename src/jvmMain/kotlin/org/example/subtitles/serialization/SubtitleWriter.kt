@@ -10,7 +10,7 @@ class SubtitleWriter(@WillNotClose outputStream: OutputStream, private val conve
     private val bufferedWriter: BufferedWriter = BufferedWriter(OutputStreamWriter(outputStream))
 
     fun writeSubtitleEntry(entry: SubtitleEntry) {
-        bufferedWriter.write(converter.toString(entry))
+        bufferedWriter.write(converter.entryToString(entry))
         bufferedWriter.flush()
     }
 }

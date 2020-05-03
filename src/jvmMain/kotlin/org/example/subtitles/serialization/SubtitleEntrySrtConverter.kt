@@ -8,7 +8,7 @@ import java.time.format.DateTimeParseException
 
 class SubtitleEntrySrtConverter : SubtitleEntryConverter {
 
-    override fun toString(entry: SubtitleEntry): String {
+    override fun entryToString(entry: SubtitleEntry): String {
         val builder = StringBuilder()
             .append("${entry.index + 1}")
             .append(lineEnding)
@@ -25,7 +25,7 @@ class SubtitleEntrySrtConverter : SubtitleEntryConverter {
         return builder.toString()
     }
 
-    override fun fromString(subtitleEntryString: String): SubtitleEntry {
+    override fun stringToEntry(subtitleEntryString: String): SubtitleEntry {
         try {
             val lines = subtitleEntryString.lines()
             val indexLine = lines.get(0)
