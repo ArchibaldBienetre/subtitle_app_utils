@@ -3,7 +3,12 @@ plugins {
 }
 repositories {
     mavenCentral()
+
+    maven {
+        url "https://dl.bintray.com/mockito/maven"
+    }
 }
+
 group 'com.example'
 version '0.0.1'
 
@@ -45,6 +50,7 @@ kotlin {
             dependencies {
                 implementation kotlin('test')
                 implementation kotlin('test-junit')
+                implementation group: 'org.mockito', name: 'mockito-android', version: '3.3.10'
             }
         }
         jsMain {
