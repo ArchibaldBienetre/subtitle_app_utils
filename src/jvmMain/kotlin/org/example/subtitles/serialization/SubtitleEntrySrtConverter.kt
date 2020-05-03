@@ -28,18 +28,20 @@ class SubtitleEntrySrtConverter : SubtitleEntryConverter {
     override fun stringToEntry(subtitleEntryString: String): SubtitleEntry {
         try {
             val lines = subtitleEntryString.lines()
-            val indexLine = lines.get(0)
-            val timeStampsLine = lines.get(1)
+            val indexLine = lines[0]
+            val timeStampsLine = lines[1]
             val timeStampsLineSplits = timeStampsLine.split(" --> ")
             var textLines = lines.subList(2, lines.size - 1)
 
 
             val entry = SubtitleEntry()
             entry.index = Integer.valueOf(indexLine) - 1
-            entry.fromTimestamp = LocalTime.parse(timeStampsLineSplits.get(0),
+            entry.fromTimestamp = LocalTime.parse(
+                timeStampsLineSplits[0],
                 dateTimeFormatter
             )
-            entry.toTimestamp = LocalTime.parse(timeStampsLineSplits.get(1),
+            entry.toTimestamp = LocalTime.parse(
+                timeStampsLineSplits[1],
                 dateTimeFormatter
             )
             while (textLines.isNotEmpty() && Strings.isNullOrEmpty(textLines.last())) {

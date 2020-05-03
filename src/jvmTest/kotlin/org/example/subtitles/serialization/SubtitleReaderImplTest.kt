@@ -45,7 +45,7 @@ class SubtitleReaderImplTest {
 
         val sequenceEntries = actual.take(1).toList()
         assertEquals(1, sequenceEntries.size)
-        assertEquals(entry, sequenceEntries.get(0))
+        assertEquals(entry, sequenceEntries[0])
     }
 
     @Test
@@ -65,7 +65,7 @@ class SubtitleReaderImplTest {
 
         val sequenceEntries = actual.take(1).toList()
         assertEquals(1, sequenceEntries.size)
-        assertEquals(entry, sequenceEntries.get(0))
+        assertEquals(entry, sequenceEntries[0])
     }
 
 
@@ -97,23 +97,23 @@ class SubtitleReaderImplTest {
         val sequenceEntries = actual.take(10).toList()
         assertEquals(6, sequenceEntries.size)
         val converter = SubtitleEntrySrtConverter()
-        assertEquals(converter.stringToEntry("1\n00:01:35,628 --> 00:01:36,654\nDégage, toi.\n\n"), sequenceEntries.get(0))
-        assertEquals(converter.stringToEntry("2\n00:01:58,209 --> 00:01:59,006\nLes voilà.\n\n"), sequenceEntries.get(1))
+        assertEquals(converter.stringToEntry("1\n00:01:35,628 --> 00:01:36,654\nDégage, toi.\n\n"), sequenceEntries[0])
+        assertEquals(converter.stringToEntry("2\n00:01:58,209 --> 00:01:59,006\nLes voilà.\n\n"), sequenceEntries[1])
         assertEquals(
             converter.stringToEntry("11\n00:02:50,209 --> 00:02:53,583\n- Je double : 200 sur l'escorte.\n- Vous allez perdre.\n\n"),
-            sequenceEntries.get(2)
+            sequenceEntries[2]
         )
         assertEquals(
             converter.stringToEntry("29\n00:03:28,574 --> 00:03:31,490\n- Je roule pas à 180 pour m'amuser !\n- Oh !\n\n"),
-            sequenceEntries.get(3)
+            sequenceEntries[3]
         )
         assertEquals(
             converter.stringToEntry("1370\n01:42:10,779 --> 01:42:12,963\n...je l'ai enfin retrouvé.\n\n"),
-            sequenceEntries.get(4)
+            sequenceEntries[4]
         )
         assertEquals(
             converter.stringToEntry("1371\n01:42:14,312 --> 01:42:15,962\nEmbrassez-la pour moi.\n\n"),
-            sequenceEntries.get(5)
+            sequenceEntries[5]
         )
     }
 }
