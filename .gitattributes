@@ -1,3 +1,6 @@
+# Kotlin
+*.kt            text diff=java
+
 # Java sources
 *.java          text diff=java
 *.gradle        text diff=java
