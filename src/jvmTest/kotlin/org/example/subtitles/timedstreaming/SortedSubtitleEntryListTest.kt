@@ -1,7 +1,7 @@
 package org.example.subtitles.timedstreaming
 
 import org.example.subtitles.SubtitleEntry
-import org.example.subtitles.serialization.SubtitleEntrySrtConverter
+import org.example.subtitles.serialization.impl.SubtitleEntrySrtConverter
 import org.example.subtitles.test.MockedReturnSubtitleReader
 import org.junit.Before
 import org.junit.Test

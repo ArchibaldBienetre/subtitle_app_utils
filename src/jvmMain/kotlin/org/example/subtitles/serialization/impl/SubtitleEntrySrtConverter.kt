@@ -1,7 +1,8 @@
-package org.example.subtitles.serialization
+package org.example.subtitles.serialization.impl
 
 import com.google.common.base.Strings
 import org.example.subtitles.SubtitleEntry
+import org.example.subtitles.serialization.SubtitleEntryConverter
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException

@@ -1,6 +1,7 @@
-package org.example.subtitles.serialization
+package org.example.subtitles.serialization.impl
 
 import org.example.subtitles.SubtitleEntry
+import org.example.subtitles.serialization.impl.SubtitleEntrySrtConverter
 import org.junit.Test
 import java.time.LocalTime
 import kotlin.test.assertEquals
