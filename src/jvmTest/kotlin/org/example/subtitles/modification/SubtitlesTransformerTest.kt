@@ -1,56 +1,18 @@
 package org.example.subtitles.modification
 
-import com.google.common.collect.Lists
 import org.example.subtitles.SubtitleEntry
-import org.example.subtitles.serialization.SubtitleReader
-import org.example.subtitles.serialization.SubtitleWriter
+import org.example.subtitles.test.MockedReturnSubtitleReader
+import org.example.subtitles.test.RecordingExceptionConsumer
+import org.example.subtitles.test.RecordingSubtitleWriter
+import org.example.subtitles.test.ThrowingSubtitleReader
 import org.junit.Test
-import java.lang.RuntimeException
 import java.time.LocalTime
-import java.util.function.Consumer
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class SubtitlesTransformerTest {
 
-    private class MockedReturnSubtitleReader(val mockedResult: Sequence<SubtitleEntry>) : SubtitleReader {
-        override fun streamSubtitleEntries(exceptionHandler: Consumer<Exception>): Sequence<SubtitleEntry> {
-            return mockedResult
-        }
-    }
-
-    private class ThrowingSubtitleReader(
-        val mockedResult1: Sequence<SubtitleEntry> = emptySequence(),
-        val exceptionToThrow: RuntimeException,
-        val mockedResult2: Sequence<SubtitleEntry> = emptySequence()
-    ) : SubtitleReader {
-        override fun streamSubtitleEntries(exceptionHandler: Consumer<Exception>): Sequence<SubtitleEntry> {
-            return sequence {
-                yieldAll(mockedResult1)
-
-                // emulates behavior of real SubtitleReader (Exception will not come through)
-                exceptionHandler.accept(exceptionToThrow)
-                yieldAll(mockedResult2)
-            }
-        }
-    }
-
     private val doNothingTransform: (SubtitleEntry) -> SubtitleEntry = { it }
-
-    private class RecordingSubtitleWriter : SubtitleWriter {
-        val encounteredSubtitles: MutableList<SubtitleEntry> = ArrayList()
-        override fun writeSubtitleEntry(entry: SubtitleEntry) {
-            encounteredSubtitles.add(entry)
-        }
-    }
-
-    private class RecordingExceptionConsumer : Consumer<Exception> {
-        val encounteredExceptions: MutableList<Exception> = ArrayList()
-        override fun accept(e: Exception) {
-            encounteredExceptions.add(e)
-        }
-    }
 
     @Test
     fun testTransformAll_nullInput() {
