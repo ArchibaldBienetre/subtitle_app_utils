@@ -17,7 +17,7 @@ open class Observable<E> {
     }
 
     fun notifyObservers(element: E) {
-        for (observer in observers) {
+        observers.parallelStream().forEach { observer ->
             try {
                 observer.update(element)
             } catch (e: Exception) {
