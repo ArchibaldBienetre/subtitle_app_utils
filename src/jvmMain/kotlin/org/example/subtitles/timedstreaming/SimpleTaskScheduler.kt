@@ -6,7 +6,7 @@ typealias MyRunnable = () -> Unit
 
 interface SimpleTaskScheduler : Closeable {
 
-    fun scheduleAtMillisFromNow(epochMillis: Long, runnable: MyRunnable)
+    fun scheduleAtMillisFromNow(millisFromNow: Long, runnable: MyRunnable)
 
     fun cancelAllScheduled()
 }
