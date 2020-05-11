@@ -112,7 +112,8 @@ task jacocoTestCoverageVerification(type: JacocoCoverageVerification) {
         rule {
             element = 'CLASS'
             // whitelist - not recognized properly by JaCoCo
-            excludes = ['*.DefaultImpls', '*.Companion', '*.Factory', '*.1', 'org.example.subtitles.modification.SubtitlesTransformer']
+            excludes = ['*.DefaultImpls', '*.Companion', '*.Factory', '*.1', 'org.example.subtitles.modification.SubtitlesTransformer',
+                        'org.example.subtitles.cli.*']
             includes = ['org.example.*']
 
             limit {
