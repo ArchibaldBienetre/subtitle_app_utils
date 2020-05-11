@@ -3,16 +3,16 @@ package org.example.subtitles.timedstreaming.impl
 import org.example.subtitles.SubtitleEntry
 import org.example.subtitles.serialization.SubtitleReader
 import org.example.subtitles.timedstreaming.Observable
+import org.example.subtitles.timedstreaming.ScrollableTimedSubtitleStreamer
 import org.example.subtitles.timedstreaming.SimpleTaskScheduler
 import org.example.subtitles.timedstreaming.SortedSubtitleEntryList
-import org.example.subtitles.timedstreaming.TimedSubtitleStreamer
 import java.time.Clock
 import java.time.Instant
 import java.time.LocalTime
 import java.util.function.Consumer
 
 /**
- * Implementation of Observable and TimedSubtitleStreamer.
+ * Implementation of Observable and ScrollableTimedSubtitleStreamer.
  *
  * Implementation details:
  * * Will read all subtitles from the given source (SubtitleReader) right away
@@ -20,7 +20,8 @@ import java.util.function.Consumer
  * * Uses java's built-in ScheduledThreadPoolExecutor for the timing part
  * * To avoid too much clock drift, will only schedule ahead a fixed window of entries.
  */
-class TimedSubtitleStreamerImpl : Observable<SubtitleEntry>, TimedSubtitleStreamer {
+class ScrollableTimedSubtitleStreamerImpl : Observable<SubtitleEntry>,
+    ScrollableTimedSubtitleStreamer {
 
     private val subtitleReader: SubtitleReader
     private val clock: Clock
@@ -31,6 +32,8 @@ class TimedSubtitleStreamerImpl : Observable<SubtitleEntry>, TimedSubtitleStream
      */
     private var startTime: Instant
     private var elapsedTime: LocalTime
+
+    private var isRunning: Boolean
 
     private var scheduler: SimpleTaskScheduler
 
@@ -49,6 +52,7 @@ class TimedSubtitleStreamerImpl : Observable<SubtitleEntry>, TimedSubtitleStream
         this.startTime = clock.instant()
         this.elapsedTime = LocalTime.ofSecondOfDay(0)
         this.scheduler = scheduler
+        this.isRunning = false
     }
 
     override fun startOrContinue() {
@@ -65,6 +69,15 @@ class TimedSubtitleStreamerImpl : Observable<SubtitleEntry>, TimedSubtitleStream
         elapsedTime = LocalTime.ofSecondOfDay(0)
     }
 
+    override fun scrollToTimestamp(timestamp: LocalTime) {
+        val wasRunning = isRunning
+        stopPlayback()
+        elapsedTime = timestamp
+        if (wasRunning) {
+            startPlayback()
+        }
+    }
+
     /* "plumbing" */
 
     /**
@@ -76,12 +89,14 @@ class TimedSubtitleStreamerImpl : Observable<SubtitleEntry>, TimedSubtitleStream
     }
 
     private fun startPlayback() {
+        isRunning = true
         val elapsedMillis = nanosToMillis(elapsedTime.toNanoOfDay())
         startTime = clock.instant().minusMillis(elapsedMillis)
         scheduleNext()
     }
 
     private fun stopPlayback() {
+        isRunning = false
         elapsedTime = LocalTime.ofNanoOfDay(millisToNanos(clock.instant().toEpochMilli() - startTime.toEpochMilli()))
         cancelAllScheduled()
     }

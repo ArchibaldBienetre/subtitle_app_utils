@@ -12,10 +12,11 @@ import org.junit.BeforeClass
 import org.junit.Test
 import java.lang.Math.min
 import java.time.Duration
+import java.time.LocalTime
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 
-class TimedSubtitleStreamerImplTest {
+class ScrollableTimedSubtitleStreamerImplTest {
 
     companion object {
         private var exampleContent: Sequence<SubtitleEntry> = emptySequence()
@@ -58,14 +59,14 @@ class TimedSubtitleStreamerImplTest {
     private var exceptionConsumer: RecordingExceptionConsumer = RecordingExceptionConsumer()
     private var recordingScheduler: RecordingTaskScheduler = RecordingTaskScheduler(clock)
 
-    private lateinit var sut: TimedSubtitleStreamerImpl
+    private lateinit var sut: ScrollableTimedSubtitleStreamerImpl
 
     @Before
     fun setUpMethod() {
         clock.forwardBy(Duration.ofHours(2))
         recordingScheduler = RecordingTaskScheduler(clock)
         exceptionConsumer = RecordingExceptionConsumer()
-        sut = TimedSubtitleStreamerImpl(
+        sut = ScrollableTimedSubtitleStreamerImpl(
             MockedReturnSubtitleReader(testSequence),
             exceptionConsumer,
             clock,
@@ -101,7 +102,7 @@ class TimedSubtitleStreamerImplTest {
         sut.startOrContinue()
 
         val actualScheduled = recordingScheduler.recordedScheduled.size
-        val expectedScheduled = min(TimedSubtitleStreamerImpl.numEntriesToScheduleAhead, 6)
+        val expectedScheduled = min(ScrollableTimedSubtitleStreamerImpl.numEntriesToScheduleAhead, 6)
         assertEquals(expectedScheduled, actualScheduled)
         assertEquals(HashMap(), recordingScheduler.recordedCanceled)
         assertEquals(0, recordingScheduler.recordedExecuted.size)
@@ -120,7 +121,7 @@ class TimedSubtitleStreamerImplTest {
         recordingScheduler.executeAllUntilNow()
 
         val actualScheduled = recordingScheduler.recordedScheduled.size
-        val expectedScheduled = min(TimedSubtitleStreamerImpl.numEntriesToScheduleAhead, 6)
+        val expectedScheduled = min(ScrollableTimedSubtitleStreamerImpl.numEntriesToScheduleAhead, 6)
         assertEquals(expectedScheduled, actualScheduled)
         assertEquals(HashMap(), recordingScheduler.recordedCanceled)
         assertEquals(1, recordingScheduler.recordedExecuted.size)
@@ -239,6 +240,55 @@ class TimedSubtitleStreamerImplTest {
         assertFalse(recordingScheduler.closeCalled)
         assertEquals(2, recordingScheduler.recordedScheduled.size)
         assertEquals(5, recordingScheduler.recordedExecuted.size)
+    }
+
+    @Test
+    fun scrollToTimestamp_nonRunning_willNotStartRunner() {
+        sut.scrollToTimestamp(LocalTime.ofNanoOfDay(2_500_000_000))
+
+        clock.forwardBy(Duration.ofHours(1))
+        recordingScheduler.executeAllUntilNow()
+        assertEquals(0, recordingScheduler.recordedCanceled.values.size)
+        assertFalse(recordingScheduler.closeCalled)
+        assertEquals(0, recordingScheduler.recordedScheduled.size)
+        assertEquals(0, recordingScheduler.recordedExecuted.size)
+    }
+
+    @Test
+    fun scrollToTimestamp_nonRunning_willStartFromGivenTimestamp() {
+        sut.scrollToTimestamp(LocalTime.ofNanoOfDay(2_500_000_000))
+
+        sut.startOrContinue()
+        clock.forwardBy(Duration.ofHours(1))
+        recordingScheduler.executeAllUntilNow()
+        assertEquals(0, recordingScheduler.recordedCanceled.values.size)
+        assertFalse(recordingScheduler.closeCalled)
+        assertEquals(3, recordingScheduler.recordedScheduled.size)
+        assertEquals(3, recordingScheduler.recordedExecuted.size)
+    }
+
+    @Test
+    fun scrollToTimestamp_running_willKeepRunning() {
+        sut.startOrContinue()
+        assertEquals(0, recordingScheduler.recordedCanceled.values.size)
+        assertFalse(recordingScheduler.closeCalled)
+        assertEquals(5, recordingScheduler.recordedScheduled.size)
+        assertEquals(0, recordingScheduler.recordedExecuted.size)
+        clock.forwardBy(Duration.ofMillis(1_500))
+        recordingScheduler.executeAllUntilNow()
+        assertEquals(0, recordingScheduler.recordedCanceled.values.size)
+        assertFalse(recordingScheduler.closeCalled)
+        assertEquals(5, recordingScheduler.recordedScheduled.size)
+        assertEquals(2, recordingScheduler.recordedExecuted.size)
+
+        sut.scrollToTimestamp(LocalTime.ofNanoOfDay(3_500_000_000))
+
+        clock.forwardBy(Duration.ofHours(1))
+        recordingScheduler.executeAllUntilNow()
+        assertEquals(5, recordingScheduler.recordedCanceled.values.size)
+        assertFalse(recordingScheduler.closeCalled)
+        assertEquals(2, recordingScheduler.recordedScheduled.size)
+        assertEquals(4, recordingScheduler.recordedExecuted.size)
     }
 
 }
