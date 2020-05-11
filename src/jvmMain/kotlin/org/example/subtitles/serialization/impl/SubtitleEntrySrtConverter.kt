@@ -1,7 +1,8 @@
-package org.example.subtitles.serialization
+package org.example.subtitles.serialization.impl
 
 import com.google.common.base.Strings
 import org.example.subtitles.SubtitleEntry
+import org.example.subtitles.serialization.SubtitleEntryConverter
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -37,11 +38,11 @@ class SubtitleEntrySrtConverter : SubtitleEntryConverter {
             val entry = SubtitleEntry()
             entry.index = Integer.valueOf(indexLine) - 1
             entry.fromTimestamp = LocalTime.parse(
-                timeStampsLineSplits[0],
+                timeStampsLineSplits[0].substring(0, 12),
                 dateTimeFormatter
             )
             entry.toTimestamp = LocalTime.parse(
-                timeStampsLineSplits[1],
+                timeStampsLineSplits[1].substring(0, 12),
                 dateTimeFormatter
             )
             while (textLines.isNotEmpty() && Strings.isNullOrEmpty(textLines.last())) {

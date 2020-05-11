@@ -1,7 +1,9 @@
-package org.example.subtitles.serialization
+package org.example.subtitles.serialization.impl
 
 import com.google.common.base.Strings
 import org.example.subtitles.SubtitleEntry
+import org.example.subtitles.serialization.SubtitleEntryConverter
+import org.example.subtitles.serialization.SubtitleReader
 import java.io.BufferedReader
 import java.io.Closeable
 import java.io.InputStream

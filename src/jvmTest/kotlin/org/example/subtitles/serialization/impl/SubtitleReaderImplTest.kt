@@ -1,4 +1,4 @@
-package org.example.subtitles.serialization
+package org.example.subtitles.serialization.impl
 
 import org.example.subtitles.SubtitleEntry
 import org.junit.Test

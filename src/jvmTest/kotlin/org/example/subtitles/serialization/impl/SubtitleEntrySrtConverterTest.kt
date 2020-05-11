@@ -1,6 +1,7 @@
-package org.example.subtitles.serialization
+package org.example.subtitles.serialization.impl
 
 import org.example.subtitles.SubtitleEntry
+import org.example.subtitles.serialization.impl.SubtitleEntrySrtConverter
 import org.junit.Test
 import java.time.LocalTime
 import kotlin.test.assertEquals
@@ -115,6 +116,25 @@ class SubtitleEntrySrtConverterTest {
         assertFailsWith(IllegalArgumentException::class) {
             sut.stringToEntry(srtString)
         }
+    }
+
+    /**
+     * Fault tolerance: In a real-life SRT file I have, there's one such entry, so I want fault tolerance for this case.
+     */
+    @Test
+    fun stringToEntry_invalidEntry_invalidDateTrailingZeroes() {
+        val srtString = "1361\n" +
+                "01:41:25,1000 --> 01:41:26,873\n" +
+                "Merci.\n"
+        val sut = SubtitleEntrySrtConverter()
+        val expectedEntry = SubtitleEntry.createFromString("Merci.")
+        expectedEntry.index = 1360
+        expectedEntry.fromTimestamp = LocalTime.of(1, 41, 25, 100)
+        expectedEntry.toTimestamp = LocalTime.of(1, 41, 26, 873)
+
+        val actualEntry = sut.stringToEntry(srtString)
+
+        assertEquals(expectedEntry, actualEntry)
     }
 
 
