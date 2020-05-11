@@ -54,10 +54,10 @@ class ForwardableClock : Clock {
         return baseClock.instant().plus(offset)
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (obj is ForwardableClock) {
-            val other = obj as ForwardableClock?
-            return baseClock == other!!.baseClock && offset == other.offset
+    override fun equals(other: Any?): Boolean {
+        if (other is ForwardableClock) {
+            val otherForwardableClock = other as ForwardableClock?
+            return baseClock == otherForwardableClock!!.baseClock && offset == otherForwardableClock.offset
         }
         return false
     }
