@@ -85,5 +85,17 @@ kotlin.sourceSets.getByName("linuxMain") {
 kotlin.sourceSets.getByName("linuxTest") {
 }
 
+// RG: I learned how to do this here:
+// https://medium.com/@preslavrachev/kotlin-basics-create-executable-kotlin-jars-using-gradle-d17e9a8384b9
+// and https://docs.gradle.org/6.4/userguide/working_with_files.html#sec:creating_uber_jar_example
+val jarTask = tasks.getByName("jvmJar") as Jar
+jarTask.manifest {
+    attributes(mapOf(Pair("Main-Class", "org.example.subtitles.cli.SimpleCliKt")))
+}
+
+jarTask.from({
+    configurations.getByName("jvmCompileClasspath").filter { it.name.endsWith("jar") }.map { zipTree(it) }
+})
+
 apply(from = "other.gradle")
 

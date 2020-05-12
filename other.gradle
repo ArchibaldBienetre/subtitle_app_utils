@@ -1,14 +1,3 @@
-kotlin {
-    // RG: I learned how to do this here: https://medium.com/@preslavrachev/kotlin-basics-create-executable-kotlin-jars-using-gradle-d17e9a8384b9
-    jvmJar {
-        manifest {
-            attributes "Main-Class": "org.example.subtitles.cli.SimpleCliKt"
-        }
-        // fat jar
-        from { configurations.jvmCompileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-    }
-}
-
 // ### Test Coverage + Coverage Verification ###
 // inspired by https://stackoverflow.com/q/45464138/1143126
 // and https://stackoverflow.com/a/49161924/1143126
