@@ -8,7 +8,8 @@ import java.util.concurrent.TimeUnit.MILLISECONDS
 
 /**
  * ScheduledThreadPoolExecutor-based implementation
- **/
+ */
+@Deprecated("use {@code SimpleTaskSchedulerPollingImpl}, this implementation has proven unreliable")
 class SimpleTaskSchedulerScheduledThreadPoolImpl : SimpleTaskScheduler {
 
     private val threadPoolExecutor: ScheduledThreadPoolExecutor = ScheduledThreadPoolExecutor(1)

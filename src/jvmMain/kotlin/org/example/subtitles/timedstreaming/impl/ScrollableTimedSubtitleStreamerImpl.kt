@@ -41,7 +41,7 @@ class ScrollableTimedSubtitleStreamerImpl : Observable<SubtitleEntry>,
         subtitleReader: SubtitleReader,
         readExceptionHandler: Consumer<Exception> = Consumer { },
         clock: Clock = Clock.systemUTC(),
-        scheduler: SimpleTaskScheduler = SimpleTaskSchedulerScheduledThreadPoolImpl()
+        scheduler: SimpleTaskScheduler = SimpleTaskSchedulerPollingImpl()
     ) : super() {
         this.subtitleReader = subtitleReader
         this.sortedSubtitles = SortedSubtitleEntryList.fromReader(

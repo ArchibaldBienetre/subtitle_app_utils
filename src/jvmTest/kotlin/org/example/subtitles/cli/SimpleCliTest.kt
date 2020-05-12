@@ -58,7 +58,6 @@ class SimpleCliTest {
         assertTrue(end - start > 5000)
         assertTrue(finishedGracefully)
         assertFalse(hardExitCalled.get())
-        // Heisenbug: Sometimes, Subtitle 6 shows up twice in the result - reason unclear
         assertEquals(
             "Subtitle 1\nSubtitle 2\nSubtitle 3\nSubtitle 4\n"
                     + "Subtitle 5\nSubtitle 6\n$endOfSubtitlesMessage\n",
