@@ -1,20 +1,22 @@
 package org.example.subtitles.timedstreaming.impl
 
+import org.example.subtitles.test.ForwardableClock
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit.SECONDS
+import java.time.Duration
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class SimpleTaskSchedulerPollingImplTest {
 
     private lateinit var sut: SimpleTaskSchedulerPollingImpl
-
+    private val clock: ForwardableClock = ForwardableClock()
+    private val pollingIntervalMs: Long = 5
     @Before
     fun setUp() {
-        sut = SimpleTaskSchedulerPollingImpl()
+        sut = SimpleTaskSchedulerPollingImpl(clock, pollingIntervalMs)
     }
 
     @After
@@ -24,62 +26,63 @@ class SimpleTaskSchedulerPollingImplTest {
 
     @Test
     fun scheduleAtMillisFromNow() {
-        val latch = CountDownLatch(1)
+        val executed = AtomicBoolean(false)
 
         sut.scheduleAtMillisFromNow(2000) {
-            latch.countDown()
+            executed.set(true)
         }
-
-        val wasExecuted = latch.await(3, SECONDS)
-        assertTrue(wasExecuted)
+        assertFalse(executed.get())
+        clock.forwardBy(Duration.ofSeconds(1))
+        assertFalse(executed.get())
+        clock.forwardBy(Duration.ofSeconds(1))
+        assertFalse(executed.get())
+        clock.forwardBy(Duration.ofNanos(1))
+        Thread.sleep(pollingIntervalMs)
+        assertTrue(executed.get())
     }
 
     @Test
     fun scheduleAtMillisFromNow_multiple() {
-        val latch1 = CountDownLatch(1)
-        val latch2 = CountDownLatch(1)
-        val latch3 = CountDownLatch(1)
-
-        sut.scheduleAtMillisFromNow(4900) {
-            latch1.countDown()
+        val executedTask1 = AtomicBoolean(false)
+        val executedTask2 = AtomicBoolean(false)
+        val executedTask3 = AtomicBoolean(false)
+        sut.scheduleAtMillisFromNow(5000) {
+            executedTask3.set(true)
         }
         sut.scheduleAtMillisFromNow(4000) {
-            latch2.countDown()
+            executedTask2.set(true)
         }
         sut.scheduleAtMillisFromNow(2000) {
-            latch3.countDown()
+            executedTask1.set(true)
         }
-
-        val wasExecuted1 = latch1.await(5, SECONDS)
-        val wasExecuted2 = latch2.await(1, SECONDS)
-        val wasExecuted3 = latch3.await(1, SECONDS)
-        assertTrue(wasExecuted1)
-        assertTrue(wasExecuted2)
-        assertTrue(wasExecuted3)
+        clock.forwardBy(Duration.ofSeconds(5).plusNanos(1))
+        Thread.sleep(pollingIntervalMs)
+        assertTrue(executedTask1.get())
+        assertTrue(executedTask2.get())
+        assertTrue(executedTask3.get())
     }
 
     @Test
     fun cancelAllScheduled() {
-        val latch1 = CountDownLatch(1)
-        val latch2 = CountDownLatch(1)
-        val latch3 = CountDownLatch(1)
+        val executedTask1 = AtomicBoolean(false)
+        val executedTask2 = AtomicBoolean(false)
+        val executedTask3 = AtomicBoolean(false)
         sut.scheduleAtMillisFromNow(5000) {
-            latch1.countDown()
+            executedTask3.set(true)
         }
         sut.scheduleAtMillisFromNow(4000) {
-            latch2.countDown()
+            executedTask2.set(true)
         }
         sut.scheduleAtMillisFromNow(2000) {
-            latch3.countDown()
+            executedTask1.set(true)
         }
 
         sut.cancelAllScheduled()
 
-        val wasExecuted1 = latch1.await(5, SECONDS)
-        val wasExecuted2 = latch2.await(1, SECONDS)
-        val wasExecuted3 = latch3.await(1, SECONDS)
-        assertFalse(wasExecuted1)
-        assertFalse(wasExecuted2)
-        assertFalse(wasExecuted3)
+        clock.forwardBy(Duration.ofSeconds(10))
+        Thread.sleep(pollingIntervalMs)
+        assertFalse(executedTask1.get())
+        assertFalse(executedTask2.get())
+        assertFalse(executedTask3.get())
     }
 }
