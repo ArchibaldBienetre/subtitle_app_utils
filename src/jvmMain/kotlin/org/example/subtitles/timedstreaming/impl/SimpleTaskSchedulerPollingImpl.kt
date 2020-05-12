@@ -17,7 +17,7 @@ class SimpleTaskSchedulerPollingImpl : SimpleTaskScheduler {
      */
     private val schedule: MutableList<Pair<Instant, MyRunnable>>
 
-    constructor(clock: Clock = Clock.systemUTC(), pollingIntervalMs: Long = 50L) {
+    constructor(clock: Clock = Clock.systemUTC(), pollingIntervalMs: Long = 10L) {
         this.clock = clock
         this.schedule = ArrayList()
         this.schedulerThread = Thread {
