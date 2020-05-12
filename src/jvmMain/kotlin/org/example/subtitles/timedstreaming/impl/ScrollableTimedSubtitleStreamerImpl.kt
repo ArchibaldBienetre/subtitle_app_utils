@@ -41,7 +41,7 @@ class ScrollableTimedSubtitleStreamerImpl : Observable<SubtitleEntry>,
         subtitleReader: SubtitleReader,
         readExceptionHandler: Consumer<Exception> = Consumer { },
         clock: Clock = Clock.systemUTC(),
-        scheduler: SimpleTaskScheduler = SimpleTaskSchedulerImpl()
+        scheduler: SimpleTaskScheduler = SimpleTaskSchedulerPollingImpl()
     ) : super() {
         this.subtitleReader = subtitleReader
         this.sortedSubtitles = SortedSubtitleEntryList.fromReader(
@@ -110,6 +110,7 @@ class ScrollableTimedSubtitleStreamerImpl : Observable<SubtitleEntry>,
 
     private fun scheduleAll(nextSubtitleEntries: List<SubtitleEntry>) {
         if (nextSubtitleEntries.isEmpty()) {
+            notifyEndOfSubtitles()
             return
         }
         val outerPlaybackTimeNanos = calculatePlaybackTime().toNanoOfDay()
@@ -131,6 +132,14 @@ class ScrollableTimedSubtitleStreamerImpl : Observable<SubtitleEntry>,
         }
     }
 
+    private fun notifyEndOfSubtitles() {
+        val entry = SubtitleEntry.createFromString(endOfSubtitlesMessage)
+        entry.index = Integer.MAX_VALUE
+        entry.fromTimestamp = calculatePlaybackTime()
+        entry.toTimestamp = entry.fromTimestamp.plusMinutes(5)
+        notifyObservers(entry)
+    }
+
     private fun cancelAllScheduled() {
         this.scheduler.cancelAllScheduled()
     }
@@ -141,6 +150,7 @@ class ScrollableTimedSubtitleStreamerImpl : Observable<SubtitleEntry>,
 
     companion object {
         const val numEntriesToScheduleAhead = 5
+        const val endOfSubtitlesMessage = "END OF SUBTITLES"
     }
 
     private fun nanosToMillis(nanos: Long): Long = nanos / 1_000_000L

@@ -44,13 +44,15 @@ kotlin {
             dependencies {
                 implementation kotlin('stdlib-jdk8')
                 implementation group: 'com.google.guava', name: 'guava', version: '29.0-android'
+
+                // CLI:
+                implementation group: 'commons-cli', name: 'commons-cli', version: '1.4'
             }
         }
         jvmTest {
             dependencies {
                 implementation kotlin('test')
                 implementation kotlin('test-junit')
-                implementation group: 'org.mockito', name: 'mockito-android', version: '3.3.10'
                 implementation group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.2'
                 implementation 'ch.qos.logback:logback-classic:1.0.13'
             }
@@ -74,9 +76,10 @@ kotlin {
     // RG: I learned how to do this here: https://medium.com/@preslavrachev/kotlin-basics-create-executable-kotlin-jars-using-gradle-d17e9a8384b9
     jvmJar {
         manifest {
+            attributes "Main-Class": "org.example.subtitles.cli.SimpleCliKt"
         }
         // fat jar
-        from { configurations.kotlinCompilerClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+        from { configurations.jvmCompileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     }
 }
 
@@ -109,7 +112,11 @@ task jacocoTestCoverageVerification(type: JacocoCoverageVerification) {
         rule {
             element = 'CLASS'
             // whitelist - not recognized properly by JaCoCo
-            excludes = ['*.DefaultImpls', '*.Companion', '*.Factory', '*.1', 'org.example.subtitles.modification.SubtitlesTransformer']
+            excludes = ['*.DefaultImpls', '*.Companion', '*.Factory', '*.1',
+                        'org.example.subtitles.modification.SubtitlesTransformer',
+                        'org.example.subtitles.cli.SimpleCliKt',
+                        'org.example.subtitles.cli.TimedSubtitlePrinter'
+            ]
             includes = ['org.example.*']
 
             limit {
@@ -129,10 +136,32 @@ task jacocoTestCoverageVerification(type: JacocoCoverageVerification) {
         }
         rule {
             element = 'CLASS'
-            includes = ['org.example.subtitles.serialization.SubtitleReader.DefaultImpls']
+            includes = [
+                    'org.example.subtitles.serialization.SubtitleReader.DefaultImpls'
+            ]
 
             limit {
                 minimum = 0.72
+            }
+        }
+        rule {
+            element = 'CLASS'
+            includes = [
+                    'org.example.subtitles.cli.SimpleCliKt',
+            ]
+
+            limit {
+                minimum = 0.77
+            }
+        }
+        rule {
+            element = 'CLASS'
+            includes = [
+                    'org.example.subtitles.cli.TimedSubtitlePrinter'
+            ]
+
+            limit {
+                minimum = 0.69
             }
         }
     }

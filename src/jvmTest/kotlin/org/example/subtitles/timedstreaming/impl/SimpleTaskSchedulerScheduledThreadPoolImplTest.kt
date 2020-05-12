@@ -9,13 +9,13 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 // not really great to test, a java.time.Clock-based implementation would probably be easier and faster to test
-class SimpleTaskSchedulerImplTest {
+class SimpleTaskSchedulerScheduledThreadPoolImplTest {
 
-    private lateinit var sut: SimpleTaskSchedulerImpl
+    private lateinit var sut: SimpleTaskSchedulerScheduledThreadPoolImpl
 
     @Before
     fun setUp() {
-        sut = SimpleTaskSchedulerImpl()
+        sut = SimpleTaskSchedulerScheduledThreadPoolImpl()
     }
 
     @After
