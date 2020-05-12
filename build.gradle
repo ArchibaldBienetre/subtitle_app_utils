@@ -1,5 +1,5 @@
 plugins {
-    id 'org.jetbrains.kotlin.multiplatform' version '1.3.72'
+    id "org.jetbrains.kotlin.multiplatform" version "1.3.72"
 }
 repositories {
     mavenCentral()
@@ -9,11 +9,11 @@ repositories {
     }
 }
 
-group 'com.example'
-version '1.0.1-SNAPSHOT'
+group "com.example"
+version "1.0.1-SNAPSHOT"
 
-apply plugin: 'maven-publish'
-apply plugin: 'jacoco'
+apply plugin: "maven-publish"
+apply plugin: "jacoco"
 
 kotlin {
     jvm()
@@ -31,40 +31,40 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation kotlin('stdlib-common')
+                implementation kotlin("stdlib-common")
             }
         }
         commonTest {
             dependencies {
-                implementation kotlin('test-common')
-                implementation kotlin('test-annotations-common')
+                implementation kotlin("test-common")
+                implementation kotlin("test-annotations-common")
             }
         }
         jvmMain {
             dependencies {
-                implementation kotlin('stdlib-jdk8')
-                implementation group: 'com.google.guava', name: 'guava', version: '29.0-android'
+                implementation kotlin("stdlib-jdk8")
+                implementation group: "com.google.guava", name: "guava", version: "29.0-android"
 
                 // CLI:
-                implementation group: 'commons-cli', name: 'commons-cli', version: '1.4'
+                implementation group: "commons-cli", name: "commons-cli", version: "1.4"
             }
         }
         jvmTest {
             dependencies {
-                implementation kotlin('test')
-                implementation kotlin('test-junit')
-                implementation group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.2'
-                implementation 'ch.qos.logback:logback-classic:1.0.13'
+                implementation kotlin("test")
+                implementation kotlin("test-junit")
+                implementation group: "org.quartz-scheduler", name: "quartz", version: "2.3.2"
+                implementation "ch.qos.logback:logback-classic:1.0.13"
             }
         }
         jsMain {
             dependencies {
-                implementation kotlin('stdlib-js')
+                implementation kotlin("stdlib-js")
             }
         }
         jsTest {
             dependencies {
-                implementation kotlin('test-js')
+                implementation kotlin("test-js")
             }
         }
         linuxMain {
@@ -99,7 +99,7 @@ task jacocoTestReport(type: JacocoReport) {
             "${projectDir}/src/jvmMain/kotlin"
     ]))
     classDirectories.setFrom(files([
-            fileTree(dir: "${buildDir}/classes", excludes: ['**/test/**'])
+            fileTree(dir: "${buildDir}/classes", excludes: ["**/test/**"])
     ]))
     executionData.setFrom(fileTree(dir: "$buildDir", includes: [
             "jacoco/*Test.exec"
@@ -110,14 +110,14 @@ task jacocoTestReport(type: JacocoReport) {
 task jacocoTestCoverageVerification(type: JacocoCoverageVerification) {
     violationRules {
         rule {
-            element = 'CLASS'
+            element = "CLASS"
             // whitelist - not recognized properly by JaCoCo
-            excludes = ['*.DefaultImpls', '*.Companion', '*.Factory', '*.1',
-                        'org.example.subtitles.modification.SubtitlesTransformer',
-                        'org.example.subtitles.cli.SimpleCliKt',
-                        'org.example.subtitles.cli.TimedSubtitlePrinter'
+            excludes = ["*.DefaultImpls", "*.Companion", "*.Factory", "*.1",
+                        "org.example.subtitles.modification.SubtitlesTransformer",
+                        "org.example.subtitles.cli.SimpleCliKt",
+                        "org.example.subtitles.cli.TimedSubtitlePrinter"
             ]
-            includes = ['org.example.*']
+            includes = ["org.example.*"]
 
             limit {
                 minimum = 0.95
@@ -127,17 +127,17 @@ task jacocoTestCoverageVerification(type: JacocoCoverageVerification) {
         // ## the following have been covered by tests, but test coverage is not properly recognized ## //
 
         rule {
-            element = 'CLASS'
-            includes = ['org.example.subtitles.modification.SubtitlesTransformer', '*.Factory']
+            element = "CLASS"
+            includes = ["org.example.subtitles.modification.SubtitlesTransformer", "*.Factory"]
 
             limit {
                 minimum = 0.83
             }
         }
         rule {
-            element = 'CLASS'
+            element = "CLASS"
             includes = [
-                    'org.example.subtitles.serialization.SubtitleReader.DefaultImpls'
+                    "org.example.subtitles.serialization.SubtitleReader.DefaultImpls"
             ]
 
             limit {
@@ -145,9 +145,9 @@ task jacocoTestCoverageVerification(type: JacocoCoverageVerification) {
             }
         }
         rule {
-            element = 'CLASS'
+            element = "CLASS"
             includes = [
-                    'org.example.subtitles.cli.SimpleCliKt',
+                    "org.example.subtitles.cli.SimpleCliKt",
             ]
 
             limit {
@@ -155,9 +155,9 @@ task jacocoTestCoverageVerification(type: JacocoCoverageVerification) {
             }
         }
         rule {
-            element = 'CLASS'
+            element = "CLASS"
             includes = [
-                    'org.example.subtitles.cli.TimedSubtitlePrinter'
+                    "org.example.subtitles.cli.TimedSubtitlePrinter"
             ]
 
             limit {
@@ -171,7 +171,7 @@ task jacocoTestCoverageVerification(type: JacocoCoverageVerification) {
             "${projectDir}/src/jvmMain/kotlin"
     ]))
     classDirectories.setFrom(files([
-            fileTree(dir: "${buildDir}/classes", excludes: ['**/test/**'])
+            fileTree(dir: "${buildDir}/classes", excludes: ["**/test/**"])
     ]))
     executionData.setFrom(fileTree(dir: "$buildDir", includes: [
             "jacoco/*Test.exec"
@@ -191,7 +191,7 @@ java {
 
 jvmTest {
     // to still run LearningTest classes, add "-PdoRunLearningTests" to your gradle command
-    if (!project.hasProperty('doRunLearningTests')) {
+    if (!project.hasProperty("doRunLearningTests")) {
         filter {
             excludeTestsMatching "*LearningTest"
         }
