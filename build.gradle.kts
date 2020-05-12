@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     id("org.jetbrains.kotlin.multiplatform") version "1.3.72"
 }
@@ -96,6 +94,14 @@ jarTask.manifest {
 jarTask.from({
     configurations.getByName("jvmCompileClasspath").filter { it.name.endsWith("jar") }.map { zipTree(it) }
 })
+
+// to still run LearningTest classes, add "-PdoRunLearningTests" to your gradle command
+if (!project.hasProperty("doRunLearningTests")) {
+    val jvmTestTask = tasks.getByName("jvmTest") as Test
+    jvmTestTask.filter {
+        excludeTestsMatching("*LearningTest")
+    }
+}
 
 apply(from = "other.gradle")
 
