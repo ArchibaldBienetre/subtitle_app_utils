@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit.MILLISECONDS
 /**
  * ScheduledThreadPoolExecutor-based implementation
  **/
-class SimpleTaskSchedulerImpl : SimpleTaskScheduler {
+class SimpleTaskSchedulerScheduledThreadPoolImpl : SimpleTaskScheduler {
 
     private val threadPoolExecutor: ScheduledThreadPoolExecutor = ScheduledThreadPoolExecutor(1)
 

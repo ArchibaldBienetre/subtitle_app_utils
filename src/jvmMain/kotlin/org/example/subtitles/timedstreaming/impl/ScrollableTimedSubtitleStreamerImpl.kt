@@ -41,7 +41,7 @@ class ScrollableTimedSubtitleStreamerImpl : Observable<SubtitleEntry>,
         subtitleReader: SubtitleReader,
         readExceptionHandler: Consumer<Exception> = Consumer { },
         clock: Clock = Clock.systemUTC(),
-        scheduler: SimpleTaskScheduler = SimpleTaskSchedulerImpl()
+        scheduler: SimpleTaskScheduler = SimpleTaskSchedulerScheduledThreadPoolImpl()
     ) : super() {
         this.subtitleReader = subtitleReader
         this.sortedSubtitles = SortedSubtitleEntryList.fromReader(
@@ -134,6 +134,7 @@ class ScrollableTimedSubtitleStreamerImpl : Observable<SubtitleEntry>,
 
     private fun notifyEndOfSubtitles() {
         val entry = SubtitleEntry.createFromString(endOfSubtitlesMessage)
+        entry.index = Integer.MAX_VALUE
         entry.fromTimestamp = calculatePlaybackTime()
         entry.toTimestamp = entry.fromTimestamp.plusMinutes(5)
         notifyObservers(entry)
