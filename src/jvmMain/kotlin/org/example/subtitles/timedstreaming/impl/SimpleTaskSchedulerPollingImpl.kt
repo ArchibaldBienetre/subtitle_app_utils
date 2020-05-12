@@ -17,7 +17,7 @@ class SimpleTaskSchedulerPollingImpl : SimpleTaskScheduler {
      */
     private val schedule: MutableList<Pair<Instant, MyRunnable>>
 
-    constructor(clock: Clock = Clock.systemUTC(), pollingInterval: Long = 50L) {
+    constructor(clock: Clock = Clock.systemUTC(), pollingIntervalMs: Long = 50L) {
         this.clock = clock
         this.schedule = ArrayList()
         this.schedulerThread = Thread {
@@ -30,7 +30,7 @@ class SimpleTaskSchedulerPollingImpl : SimpleTaskScheduler {
                             it.second()
                         }
                     }
-                    Thread.sleep(pollingInterval)
+                    Thread.sleep(pollingIntervalMs)
                 }
             } catch (e: InterruptedException) {
                 // do nothing - graceful shutdown
