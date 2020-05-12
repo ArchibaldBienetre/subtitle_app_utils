@@ -103,5 +103,20 @@ if (!project.hasProperty("doRunLearningTests")) {
     }
 }
 
+
 apply(from = "other.gradle")
 
+
+val jacocoTestReport = tasks.getByName("jacocoTestReport")
+val jacocoTestCoverageVerification = tasks.getByName("jacocoTestCoverageVerification")
+tasks.withType(Test::class).forEach {
+    it.finalizedBy(jacocoTestReport)
+    it.finalizedBy(jacocoTestCoverageVerification)
+}
+jacocoTestCoverageVerification.dependsOn(jacocoTestReport)
+
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}

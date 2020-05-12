@@ -92,14 +92,3 @@ task jacocoTestCoverageVerification(type: JacocoCoverageVerification) {
     ]))
 }
 
-tasks.withType(Test).each {
-    it.finalizedBy jacocoTestReport
-    it.finalizedBy jacocoTestCoverageVerification
-}
-jacocoTestCoverageVerification.dependsOn jacocoTestReport
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
-
