@@ -112,8 +112,11 @@ task jacocoTestCoverageVerification(type: JacocoCoverageVerification) {
         rule {
             element = 'CLASS'
             // whitelist - not recognized properly by JaCoCo
-            excludes = ['*.DefaultImpls', '*.Companion', '*.Factory', '*.1', 'org.example.subtitles.modification.SubtitlesTransformer',
-                        'org.example.subtitles.cli.*']
+            excludes = ['*.DefaultImpls', '*.Companion', '*.Factory', '*.1',
+                        'org.example.subtitles.modification.SubtitlesTransformer',
+                        'org.example.subtitles.cli.SimpleCliKt',
+                        'org.example.subtitles.cli.TimedSubtitlePrinter'
+            ]
             includes = ['org.example.*']
 
             limit {
@@ -133,10 +136,32 @@ task jacocoTestCoverageVerification(type: JacocoCoverageVerification) {
         }
         rule {
             element = 'CLASS'
-            includes = ['org.example.subtitles.serialization.SubtitleReader.DefaultImpls']
+            includes = [
+                    'org.example.subtitles.serialization.SubtitleReader.DefaultImpls'
+            ]
 
             limit {
                 minimum = 0.72
+            }
+        }
+        rule {
+            element = 'CLASS'
+            includes = [
+                    'org.example.subtitles.cli.SimpleCliKt',
+            ]
+
+            limit {
+                minimum = 0.77
+            }
+        }
+        rule {
+            element = 'CLASS'
+            includes = [
+                    'org.example.subtitles.cli.TimedSubtitlePrinter'
+            ]
+
+            limit {
+                minimum = 0.69
             }
         }
     }
