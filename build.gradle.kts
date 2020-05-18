@@ -91,7 +91,9 @@ tasks.named<Jar>("jvmJar") {
     }
 
     from({
-        configurations.named("jvmCompileClasspath").filter { it.name.endsWith("jar") }.map { zipTree(it) }
+        configurations.named("jvmCompileClasspath").get()
+            .filter { it.name.endsWith("jar") }
+            .map { zipTree(it) }
     })
 }
 
