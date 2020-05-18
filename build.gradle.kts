@@ -1,5 +1,6 @@
 plugins {
     id("org.jetbrains.kotlin.multiplatform") version "1.3.72"
+    jacoco
 }
 
 repositories {
@@ -103,9 +104,111 @@ if (!project.hasProperty("doRunLearningTests")) {
     }
 }
 
+jacoco {
+    toolVersion = "0.8.5"
+}
 
-apply(from = "other.gradle")
 
+// ### Test Coverage + Coverage Verification ###
+// inspired by https://stackoverflow.com/q/45464138/1143126
+// and https://stackoverflow.com/a/49161924/1143126
+task("jacocoTestReport", JacocoReport::class) {
+    reports {
+        xml.isEnabled = true
+        html.isEnabled = true
+    }
+    sourceDirectories.setFrom(
+        files(
+            "${projectDir}/src/commonMain/kotlin",
+            "${projectDir}/src/jvmMain/kotlin"
+        )
+    )
+    classDirectories.setFrom(
+        fileTree("${buildDir}/classes").matching {
+            exclude("**/test/**")
+        }
+    )
+    executionData.setFrom(
+        fileTree("$buildDir").matching {
+            include("jacoco/*Test.exec")
+        }
+    )
+}
+
+task("jacocoTestCoverageVerification", JacocoCoverageVerification::class) {
+    violationRules {
+        rule {
+            element = "CLASS"
+            // whitelist - not recognized properly by JaCoCo
+            excludes = listOf("*.DefaultImpls", "*.Companion", "*.Factory", "*.1",
+                "org.example.subtitles.modification.SubtitlesTransformer",
+                "org.example.subtitles.cli.SimpleCliKt",
+                "org.example.subtitles.cli.TimedSubtitlePrinter")
+
+            includes = listOf("org.example.*")
+
+            limit {
+                minimum = "0.95".toBigDecimal()
+            }
+        }
+
+        // ## the following have been covered by tests, but test coverage is not properly recognized ## //
+        rule {
+            element = "CLASS"
+            includes = listOf("org.example.subtitles.modification.SubtitlesTransformer", "*.Factory")
+
+            limit {
+                minimum = "0.83".toBigDecimal()
+            }
+        }
+        rule {
+            element = "CLASS"
+            includes = listOf(
+                "org.example.subtitles.serialization.SubtitleReader.DefaultImpls"
+            )
+
+            limit {
+                minimum = "0.72".toBigDecimal()
+            }
+        }
+        rule {
+            element = "CLASS"
+            includes = listOf(
+                "org.example.subtitles.cli.SimpleCliKt"
+            )
+
+            limit {
+                minimum = "0.77".toBigDecimal()
+            }
+        }
+        rule {
+            element = "CLASS"
+            includes = listOf(
+                "org.example.subtitles.cli.TimedSubtitlePrinter"
+            )
+
+            limit {
+                minimum = "0.69".toBigDecimal()
+            }
+        }
+    }
+    sourceDirectories.setFrom(
+        files(
+            "${projectDir}/src/commonMain/kotlin",
+            "${projectDir}/src/jvmMain/kotlin"
+        )
+    )
+    classDirectories.setFrom(
+        fileTree("${buildDir}/classes").matching {
+            exclude("**/test/**")
+        }
+    )
+    executionData.setFrom(
+        fileTree("$buildDir").matching {
+            include("jacoco/*Test.exec")
+        }
+    )
+}
 
 val jacocoTestReport = tasks.getByName("jacocoTestReport")
 val jacocoTestCoverageVerification = tasks.getByName("jacocoTestCoverageVerification")
