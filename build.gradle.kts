@@ -104,11 +104,6 @@ if (!project.hasProperty("doRunLearningTests")) {
     }
 }
 
-jacoco {
-    toolVersion = "0.8.5"
-}
-
-
 // ### Test Coverage + Coverage Verification ###
 // inspired by https://stackoverflow.com/q/45464138/1143126
 // and https://stackoverflow.com/a/49161924/1143126
@@ -119,12 +114,12 @@ task("jacocoTestReport", JacocoReport::class) {
     }
     sourceDirectories.setFrom(
         files(
-            "${projectDir}/src/commonMain/kotlin",
-            "${projectDir}/src/jvmMain/kotlin"
+            "$projectDir/src/commonMain/kotlin",
+            "$projectDir/src/jvmMain/kotlin"
         )
     )
     classDirectories.setFrom(
-        fileTree("${buildDir}/classes").matching {
+        fileTree("$buildDir/classes").matching {
             exclude("**/test/**")
         }
     )
@@ -140,10 +135,12 @@ task("jacocoTestCoverageVerification", JacocoCoverageVerification::class) {
         rule {
             element = "CLASS"
             // whitelist - not recognized properly by JaCoCo
-            excludes = listOf("*.DefaultImpls", "*.Companion", "*.Factory", "*.1",
+            excludes = listOf(
+                "*.DefaultImpls", "*.Companion", "*.Factory", "*.1",
                 "org.example.subtitles.modification.SubtitlesTransformer",
                 "org.example.subtitles.cli.SimpleCliKt",
-                "org.example.subtitles.cli.TimedSubtitlePrinter")
+                "org.example.subtitles.cli.TimedSubtitlePrinter"
+            )
 
             includes = listOf("org.example.*")
 
@@ -194,12 +191,12 @@ task("jacocoTestCoverageVerification", JacocoCoverageVerification::class) {
     }
     sourceDirectories.setFrom(
         files(
-            "${projectDir}/src/commonMain/kotlin",
-            "${projectDir}/src/jvmMain/kotlin"
+            "$projectDir/src/commonMain/kotlin",
+            "$projectDir/src/jvmMain/kotlin"
         )
     )
     classDirectories.setFrom(
-        fileTree("${buildDir}/classes").matching {
+        fileTree("$buildDir/classes").matching {
             exclude("**/test/**")
         }
     )
