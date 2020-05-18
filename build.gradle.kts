@@ -1,6 +1,7 @@
 plugins {
     id("org.jetbrains.kotlin.multiplatform") version "1.3.72"
     jacoco
+    "maven-publish"
 }
 
 repositories {
@@ -13,9 +14,6 @@ repositories {
 
 group = "com.example"
 version = "1.0.1-SNAPSHOT"
-
-apply(plugin = "maven-publish")
-apply(plugin = "jacoco")
 
 kotlin {
     jvm()
@@ -107,7 +105,7 @@ if (!project.hasProperty("doRunLearningTests")) {
 // ### Test Coverage + Coverage Verification ###
 // inspired by https://stackoverflow.com/q/45464138/1143126
 // and https://stackoverflow.com/a/49161924/1143126
-task("jacocoTestReport", JacocoReport::class) {
+val jacocoTestReport = task("jacocoTestReport", JacocoReport::class) {
     reports {
         xml.isEnabled = true
         html.isEnabled = true
@@ -130,7 +128,7 @@ task("jacocoTestReport", JacocoReport::class) {
     )
 }
 
-task("jacocoTestCoverageVerification", JacocoCoverageVerification::class) {
+val jacocoTestCoverageVerification = task("jacocoTestCoverageVerification", JacocoCoverageVerification::class) {
     violationRules {
         rule {
             element = "CLASS"
@@ -207,14 +205,11 @@ task("jacocoTestCoverageVerification", JacocoCoverageVerification::class) {
     )
 }
 
-val jacocoTestReport = tasks.getByName("jacocoTestReport")
-val jacocoTestCoverageVerification = tasks.getByName("jacocoTestCoverageVerification")
 tasks.withType(Test::class).forEach {
     it.finalizedBy(jacocoTestReport)
     it.finalizedBy(jacocoTestCoverageVerification)
 }
 jacocoTestCoverageVerification.dependsOn(jacocoTestReport)
-
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
