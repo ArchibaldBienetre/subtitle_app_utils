@@ -15,7 +15,7 @@ import kotlin.test.assertTrue
 
 class CommandLineArgsParserImplTest {
 
-    private val validFilePath = "src/jvmTest/resources/test_subtitles_start_00:00:00.srt"
+    private val validFilePath = "src/jvmTest/resources/test_subtitles_start_00-00-00.srt"
     private val invalidFilePath = "?:X/\\\"''"
     private val nonExistentFilePath = "src/jvmTest/resources/noSuchFile.srt"
 
