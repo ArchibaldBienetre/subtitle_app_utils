@@ -1,6 +1,7 @@
 package org.example.subtitles.cli
 
 import org.example.subtitles.SubtitleEntry
+import org.example.subtitles.cli.CommandLineArgsParser.CommandLineParams
 import org.example.subtitles.serialization.impl.SubtitleEntrySrtConverter
 import org.example.subtitles.serialization.impl.SubtitleReaderImpl
 import org.example.subtitles.timedstreaming.Observer
@@ -28,7 +29,7 @@ java -jar build/libs/subtitle_app_utils-jvm-0.9.2-SNAPSHOT.jar -i "$PWD/src/jvmT
 fun main(args: Array<String>) {
     val outputStream = System.out
     val hardExitBlock = { exitProcess(1) }
-    val commandLineArgsParser = CommandLineArgsParserImpl()
+    val commandLineArgsParser = CommandLineArgsParserApacheCommonsImpl()
     processParams(outputStream, hardExitBlock, commandLineArgsParser, args)
 }
 

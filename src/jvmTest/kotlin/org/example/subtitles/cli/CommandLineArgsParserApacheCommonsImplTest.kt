@@ -1,8 +1,8 @@
 package org.example.subtitles.cli
 
-import org.example.subtitles.cli.CommandLineArgsParserImpl.Companion.fileNotFoundExceptionMessage
-import org.example.subtitles.cli.CommandLineArgsParserImpl.Companion.parseExceptionMessage
-import org.example.subtitles.cli.CommandLineArgsParserImpl.Companion.timeStampExceptionMessage
+import org.example.subtitles.cli.CommandLineArgsParserApacheCommonsImpl.Companion.fileNotFoundExceptionMessage
+import org.example.subtitles.cli.CommandLineArgsParserApacheCommonsImpl.Companion.parseExceptionMessage
+import org.example.subtitles.cli.CommandLineArgsParserApacheCommonsImpl.Companion.timeStampExceptionMessage
 import org.junit.Before
 import org.junit.Test
 import java.io.ByteArrayOutputStream
@@ -13,13 +13,13 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
-class CommandLineArgsParserImplTest {
+class CommandLineArgsParserApacheCommonsImplTest {
 
     private val validFilePath = "src/jvmTest/resources/test_subtitles_start_00-00-00.srt"
     private val invalidFilePath = "?:X/\\\"''"
     private val nonExistentFilePath = "src/jvmTest/resources/noSuchFile.srt"
 
-    var sut = CommandLineArgsParserImpl()
+    var sut = CommandLineArgsParserApacheCommonsImpl()
     lateinit var out: ByteArrayOutputStream
     lateinit var writer: PrintWriter
 

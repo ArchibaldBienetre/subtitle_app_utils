@@ -1,5 +1,6 @@
 package org.example.subtitles.cli
 
+import org.example.subtitles.cli.CommandLineArgsParser.CommandLineParams
 import org.example.subtitles.timedstreaming.impl.ScrollableTimedSubtitleStreamerImpl.Companion.endOfSubtitlesMessage
 import org.junit.Before
 import org.junit.Test
