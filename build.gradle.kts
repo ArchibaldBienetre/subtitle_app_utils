@@ -44,7 +44,7 @@ kotlin {
     }
 }
 
-kotlin.sourceSets.getByName("jvmMain") {
+kotlin.sourceSets.named("jvmMain") {
     dependencies {
         implementation(kotlin("stdlib-jdk8"))
         implementation("com.google.guava:guava:29.0-android")
@@ -55,7 +55,7 @@ kotlin.sourceSets.getByName("jvmMain") {
 
 }
 
-kotlin.sourceSets.getByName("jvmTest") {
+kotlin.sourceSets.named("jvmTest") {
     dependencies {
         implementation(kotlin("test"))
         implementation(kotlin("test-junit"))
@@ -64,41 +64,43 @@ kotlin.sourceSets.getByName("jvmTest") {
     }
 }
 
-kotlin.sourceSets.getByName("jsMain") {
+kotlin.sourceSets.named("jsMain") {
     dependencies {
         implementation(kotlin("stdlib-js"))
     }
 }
 
-kotlin.sourceSets.getByName("jsTest") {
+kotlin.sourceSets.named("jsTest") {
     dependencies {
         implementation(kotlin("test-js"))
     }
 }
 
-kotlin.sourceSets.getByName("linuxMain") {
+kotlin.sourceSets.named("linuxMain") {
 }
 
-kotlin.sourceSets.getByName("linuxTest") {
+kotlin.sourceSets.named("linuxTest") {
 }
 
 // RG: I learned how to do this here:
 // https://medium.com/@preslavrachev/kotlin-basics-create-executable-kotlin-jars-using-gradle-d17e9a8384b9
 // and https://docs.gradle.org/6.4/userguide/working_with_files.html#sec:creating_uber_jar_example
-val jarTask = tasks.getByName("jvmJar") as Jar
-jarTask.manifest {
-    attributes(mapOf(Pair("Main-Class", "org.example.subtitles.cli.SimpleCliKt")))
-}
+tasks.named<Jar>("jvmJar") {
+    manifest {
+        attributes(mapOf(Pair("Main-Class", "org.example.subtitles.cli.SimpleCliKt")))
+    }
 
-jarTask.from({
-    configurations.getByName("jvmCompileClasspath").filter { it.name.endsWith("jar") }.map { zipTree(it) }
-})
+    from({
+        configurations.named("jvmCompileClasspath").filter { it.name.endsWith("jar") }.map { zipTree(it) }
+    })
+}
 
 // to still run LearningTest classes, add "-PdoRunLearningTests" to your gradle command
 if (!project.hasProperty("doRunLearningTests")) {
-    val jvmTestTask = tasks.getByName("jvmTest") as Test
-    jvmTestTask.filter {
-        excludeTestsMatching("*LearningTest")
+    tasks.named<Test>("jvmTest") {
+        filter {
+            excludeTestsMatching("*LearningTest")
+        }
     }
 }
 
