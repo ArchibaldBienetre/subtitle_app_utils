@@ -46,6 +46,7 @@ kotlin.sourceSets.named("jvmMain") {
 
         // CLI:
         implementation("commons-cli:commons-cli:1.4")
+        implementation("args4j:args4j:2.33")
     }
 
 }
