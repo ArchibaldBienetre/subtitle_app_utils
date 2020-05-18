@@ -1,15 +1,10 @@
 plugins {
     id("org.jetbrains.kotlin.multiplatform") version "1.3.72"
     jacoco
-    "maven-publish"
 }
 
 repositories {
     mavenCentral()
-
-    maven {
-        url = project.uri("https://dl.bintray.com/mockito/maven")
-    }
 }
 
 group = "com.example"
