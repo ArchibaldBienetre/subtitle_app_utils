@@ -106,8 +106,7 @@ if (!project.hasProperty("doRunLearningTests")) {
 // inspired by https://stackoverflow.com/q/45464138/1143126
 // and https://stackoverflow.com/a/49161924/1143126
 val jacocoTestReport =
-    tasks.register("jacocoTestReport", JacocoReport::class)
-    {
+    tasks.register<JacocoReport>("jacocoTestReport") {
         reports {
             xml.isEnabled = true
             html.isEnabled = true
@@ -131,8 +130,7 @@ val jacocoTestReport =
     }
 
 val jacocoTestCoverageVerification =
-    tasks.register("jacocoTestCoverageVerification", JacocoCoverageVerification::class)
-    {
+    tasks.register<JacocoCoverageVerification>("jacocoTestCoverageVerification") {
         violationRules {
             rule {
                 element = "CLASS"
