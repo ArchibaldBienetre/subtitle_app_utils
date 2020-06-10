@@ -83,7 +83,14 @@ kotlin.sourceSets.named("linuxTest") {
 // and https://docs.gradle.org/6.4/userguide/working_with_files.html#sec:creating_uber_jar_example
 tasks.named<Jar>("jvmJar") {
     manifest {
-        attributes(mapOf(Pair("Main-Class", "org.example.subtitles.cli.SimpleCliKt")))
+        attributes(
+            // https://docs.oracle.com/javase/6/docs/technotes/guides/jar/jar.html#JAR%20Manifest
+            // https://docs.oracle.com/javase/6/docs/technotes/guides/extensions/versioning.html
+            mapOf(
+                Pair("Main-Class", "org.example.subtitles.cli.SimpleCliKt"),
+                Pair("Implementation-Version", project.version)
+            )
+        )
     }
 
     from({
