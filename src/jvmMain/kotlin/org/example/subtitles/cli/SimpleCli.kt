@@ -1,7 +1,6 @@
 package org.example.subtitles.cli
 
 import org.example.subtitles.SubtitleEntry
-import org.example.subtitles.cli.CommandLineArgsParser.CommandLineParams
 import org.example.subtitles.serialization.impl.SubtitleEntrySrtConverter
 import org.example.subtitles.serialization.impl.SubtitleReaderImpl
 import org.example.subtitles.timedstreaming.Observer
@@ -39,7 +38,7 @@ fun processParams(
     commandLineArgsParser: CommandLineArgsParser,
     args: Array<String>
 ) {
-    val params: CommandLineParams
+    val params: StreamingCommandLineParams
     try {
         params = commandLineArgsParser.parseCommandLineParameters(args, PrintWriter(outputStream))
     } catch (e: IllegalArgumentException) {

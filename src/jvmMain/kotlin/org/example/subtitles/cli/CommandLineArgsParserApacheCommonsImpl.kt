@@ -2,7 +2,6 @@ package org.example.subtitles.cli
 
 import org.apache.commons.cli.*
 import org.apache.commons.cli.HelpFormatter.*
-import org.example.subtitles.cli.CommandLineArgsParser.CommandLineParams
 import java.io.File
 import java.io.PrintWriter
 import java.time.LocalTime
@@ -13,7 +12,7 @@ class CommandLineArgsParserApacheCommonsImpl : CommandLineArgsParser {
     override fun parseCommandLineParameters(
         args: Array<String>,
         writer: PrintWriter
-    ): CommandLineParams {
+    ): StreamingCommandLineParams {
         val options = Options()
         val inputFileOption = Option("i", "inputFile", true, "path to input file in SRT format")
         inputFileOption.isRequired = true
@@ -44,7 +43,7 @@ class CommandLineArgsParserApacheCommonsImpl : CommandLineArgsParser {
         } catch (e: DateTimeParseException) {
             throw IllegalArgumentException(timeStampExceptionMessage)
         }
-        return CommandLineParams(inputFile, timeStamp)
+        return StreamingCommandLineParams(inputFile, timeStamp)
     }
 
     companion object {

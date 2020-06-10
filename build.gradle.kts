@@ -144,11 +144,13 @@ val jacocoTestCoverageVerification =
                 // whitelist - not recognized properly by JaCoCo
                 excludes = listOf(
                     "*.DefaultImpls", "*.Companion", "*.Factory", "*.1",
-                    "org.example.subtitles.modification.SubtitlesTransformer",
-                    "org.example.subtitles.cli.CommandLineArgsParserApacheCommonsImpl",
+                    "org.example.subtitles.cli.BasicCommandLineParams",
                     "org.example.subtitles.cli.CommandLineArgsParser",
+                    "org.example.subtitles.cli.CommandLineArgsParserApacheCommonsImpl",
+                    "org.example.subtitles.cli.ModificationCommandLineParams",
                     "org.example.subtitles.cli.SimpleCliKt",
-                    "org.example.subtitles.cli.TimedSubtitlePrinter"
+                    "org.example.subtitles.cli.TimedSubtitlePrinter",
+                    "org.example.subtitles.modification.SubtitlesTransformer"
                 )
 
                 includes = listOf("org.example.*")

@@ -4,8 +4,22 @@ import java.io.File
 import java.io.PrintWriter
 import java.time.LocalTime
 
-interface CommandLineArgsParser {
-    data class CommandLineParams(val inputFile: File, val startingOffset: LocalTime)
+sealed class BasicCommandLineParams(open val inputFile: File)
+data class StreamingCommandLineParams(
+    override val inputFile: File,
+    val startingOffset: LocalTime
+) : BasicCommandLineParams(inputFile = inputFile)
 
-    fun parseCommandLineParameters(args: Array<String>, writer: PrintWriter): CommandLineParams
+data class ModificationCommandLineParams(
+    override val inputFile: File,
+    val modificationOffset: LocalTime,
+    val outputFile: File
+) : BasicCommandLineParams(inputFile = inputFile)
+
+interface CommandLineArgsParser {
+    fun parseCommandLineParameters(args: Array<String>, writer: PrintWriter): StreamingCommandLineParams
+}
+
+interface ExtendedCommandLineArgsParser {
+    fun parseCommandLineParameters(args: Array<String>, writer: PrintWriter): BasicCommandLineParams
 }
