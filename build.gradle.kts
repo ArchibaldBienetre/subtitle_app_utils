@@ -144,13 +144,15 @@ val jacocoTestCoverageVerification =
                 // whitelist - not recognized properly by JaCoCo
                 excludes = listOf(
                     "*.DefaultImpls", "*.Companion", "*.Factory", "*.1",
-                    "org.example.subtitles.cli.BasicCommandLineParams",
-                    "org.example.subtitles.cli.CommandLineArgsParser",
+                    "org.example.subtitles.modification.SubtitlesTransformer",
                     "org.example.subtitles.cli.CommandLineArgsParserApacheCommonsImpl",
-                    "org.example.subtitles.cli.ModificationCommandLineParams",
+                    "org.example.subtitles.cli.CommandLineArgsParser",
                     "org.example.subtitles.cli.SimpleCliKt",
                     "org.example.subtitles.cli.TimedSubtitlePrinter",
-                    "org.example.subtitles.modification.SubtitlesTransformer"
+                    "org.example.subtitles.cli.Args4JCommand",
+                    "org.example.subtitles.cli.BasicCommandLineParams",
+                    "org.example.subtitles.cli.StreamingOptions",
+                    "org.example.subtitles.cli.ModificationOptions"
                 )
 
                 includes = listOf("org.example.*")
@@ -172,6 +174,17 @@ val jacocoTestCoverageVerification =
             rule {
                 element = "CLASS"
                 includes = listOf(
+                    "org.example.subtitles.cli.BasicCommandLineParams",
+                    "org.example.subtitles.cli.SimpleCliKt" // 0.77
+                )
+
+                limit {
+                    minimum = "0.76".toBigDecimal()
+                }
+            }
+            rule {
+                element = "CLASS"
+                includes = listOf(
                     "org.example.subtitles.serialization.SubtitleReader.DefaultImpls"
                 )
 
@@ -182,21 +195,35 @@ val jacocoTestCoverageVerification =
             rule {
                 element = "CLASS"
                 includes = listOf(
-                    "org.example.subtitles.cli.SimpleCliKt"
+                    "org.example.subtitles.cli.TimedSubtitlePrinter",
+                    "org.example.subtitles.cli.ModificationOptions"// 0.70
                 )
 
                 limit {
-                    minimum = "0.77".toBigDecimal()
+                    minimum = "0.69".toBigDecimal()
+
                 }
             }
             rule {
                 element = "CLASS"
                 includes = listOf(
-                    "org.example.subtitles.cli.TimedSubtitlePrinter"
+                    "org.example.subtitles.cli.StreamingOptions"
                 )
 
                 limit {
-                    minimum = "0.69".toBigDecimal()
+                    minimum = "0.66".toBigDecimal()
+
+                }
+            }
+            rule {
+                element = "CLASS"
+                includes = listOf(
+                    "org.example.subtitles.cli.Args4JCommand"
+                )
+
+                limit {
+                    minimum = "0.60".toBigDecimal()
+
                 }
             }
         }
