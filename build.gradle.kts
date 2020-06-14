@@ -166,7 +166,11 @@ val jacocoTestCoverageVerification =
             // ## the following have been covered by tests, but test coverage is not properly recognized ## //
             rule {
                 element = "CLASS"
-                includes = listOf("org.example.subtitles.modification.SubtitlesTransformer", "*.Factory")
+                includes = listOf(
+                    "*.Factory",
+                    "org.example.subtitles.modification.SubtitlesTransformer",
+                    "org.example.subtitles.cli.Args4JCliKt" // 0.84
+                )
 
                 limit {
                     minimum = "0.83".toBigDecimal()

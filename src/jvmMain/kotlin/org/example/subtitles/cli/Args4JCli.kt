@@ -42,7 +42,7 @@ fun main(args: Array<String>) {
 fun processParams(
     outputStream: PrintStream,
     hardExitBlock: () -> Nothing,
-    commandLineArgsParser: CommandLineArgsParserArgs4JImpl,
+    commandLineArgsParser: ExtendedCommandLineArgsParser,
     args: Array<String>
 ) {
     val params: BasicCommandLineParams
@@ -53,10 +53,15 @@ fun processParams(
         hardExitBlock()
     }
 
-    if (params is StreamingCommandLineParams) {
-        streamForParams(params, outputStream)
-    } else if (params is ModificationCommandLineParams) {
-        modifyForParams(params)
+    try {
+        if (params is StreamingCommandLineParams) {
+            streamForParams(params, outputStream)
+        } else if (params is ModificationCommandLineParams) {
+            modifyForParams(params)
+        }
+    } catch (e: Exception) {
+        outputStream.println(e.message)
+        hardExitBlock()
     }
 
 }
