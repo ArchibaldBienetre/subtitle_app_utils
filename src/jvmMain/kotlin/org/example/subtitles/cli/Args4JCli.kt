@@ -24,7 +24,7 @@ import kotlin.system.exitProcess
  *
  * How to use this as a CLI:
  * ```
-# build the jar file, e.g. for version 0.9.2-SNAPSHOT
+# build the jar file, e.g. for version 1.0.2-SNAPSHOT
 ./gradlew jvmJar
 # execute main class in jar - e.g. streaming of subtitles from a file
 java -jar build/libs/subtitle_app_utils-jvm-1.0.2-SNAPSHOT.jar stream -i "$PWD/src/jvmTest/resources/test_subtitles2.srt"
