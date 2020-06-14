@@ -87,7 +87,7 @@ tasks.named<Jar>("jvmJar") {
             // https://docs.oracle.com/javase/6/docs/technotes/guides/jar/jar.html#JAR%20Manifest
             // https://docs.oracle.com/javase/6/docs/technotes/guides/extensions/versioning.html
             mapOf(
-                Pair("Main-Class", "org.example.subtitles.cli.SimpleCliKt"),
+                Pair("Main-Class", "org.example.subtitles.cli.Args4JCliKt"),
                 Pair("Implementation-Version", project.version)
             )
         )
@@ -147,6 +147,7 @@ val jacocoTestCoverageVerification =
                     "org.example.subtitles.modification.SubtitlesTransformer",
                     "org.example.subtitles.cli.CommandLineArgsParserApacheCommonsImpl",
                     "org.example.subtitles.cli.CommandLineArgsParser",
+                    "org.example.subtitles.cli.Args4JCliKt",
                     "org.example.subtitles.cli.SimpleCliKt",
                     "org.example.subtitles.cli.TimedSubtitlePrinter",
                     "org.example.subtitles.cli.Args4JCommand",
