@@ -61,14 +61,13 @@ class StreamingOptions : AbstractOptions() {
         name = "-t",
         aliases = ["--timestamp"],
         metaVar = "TIMESTAMP",
-        required = true,
         usage = "timestamp where to start streaming, format: 12:34:56.123456789",
         handler = LocalTimeOptionHandler::class
     )
-    var startingOffset: LocalTime? = null
+    var startingOffset: LocalTime = LocalTime.of(0, 0)
 
 
-    override fun toParams() = StreamingCommandLineParams(inputFile!!, startingOffset!!)
+    override fun toParams() = StreamingCommandLineParams(inputFile!!, startingOffset)
 }
 
 

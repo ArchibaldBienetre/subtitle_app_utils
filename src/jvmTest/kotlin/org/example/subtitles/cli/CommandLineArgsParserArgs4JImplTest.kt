@@ -41,6 +41,18 @@ class CommandLineArgsParserArgs4JImplTest {
     }
 
     @Test
+    fun parseCommandlineParameters_streaming_defaults() {
+        val testArgs = listOf("stream", "-i", validFilePath).toTypedArray()
+
+        val actual = sut.parseCommandLineParameters(testArgs, writer)
+
+        assertTrue(actual is StreamingCommandLineParams);
+        assertEquals(actual.inputFile, File(validFilePath))
+        assertEquals(actual.startingOffset, LocalTime.of(0, 0))
+        assertTrue(out.toString().isEmpty())
+    }
+
+    @Test
     fun parseCommandlineParameters_onValidModificationParams_succeeds() {
         val testArgs = listOf(
             "modify",
