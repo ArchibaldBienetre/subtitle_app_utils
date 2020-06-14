@@ -1,7 +1,7 @@
 package org.example.subtitles.cli
 
 import org.example.subtitles.SubtitleEntry
-import org.example.subtitles.modification.SubtitlesTransformer
+import org.example.subtitles.modification.SubtitlesTimestampTransformer
 import org.example.subtitles.serialization.impl.SubtitleEntrySrtConverter
 import org.example.subtitles.serialization.impl.SubtitleReaderImpl
 import org.example.subtitles.serialization.impl.SubtitleWriterImpl
@@ -106,24 +106,12 @@ private fun streamForParams(
 private fun modifyForParams(
     params: ModificationCommandLineParams
 ) {
-    val deltaNanos = params.modificationOffset.toNanos()
     val reader = SubtitleReaderImpl(FileInputStream(params.inputFile), SubtitleEntrySrtConverter())
     val writerStream = FileOutputStream(params.outputFile)
     val writer = SubtitleWriterImpl(writerStream, SubtitleEntrySrtConverter())
-
-    // TODO extract to SubtitlesTimestampsTransformer class
-    val modifier: (SubtitleEntry) -> SubtitleEntry = { entry ->
-        val newEntry = SubtitleEntry.copyOf(entry)
-        if (newEntry.fromTimestamp.toNanoOfDay() < -1 * deltaNanos) {
-            throw IllegalArgumentException("Modification would create a negative timestamp")
-        }
-        newEntry.fromTimestamp = entry.fromTimestamp.plusNanos(deltaNanos)
-        newEntry.toTimestamp = entry.toTimestamp.plusNanos(deltaNanos)
-        newEntry
-    }
-    val transformer = SubtitlesTransformer(reader, modifier, writer)
+    val transformer = SubtitlesTimestampTransformer(reader, writer, params.modificationOffset)
     transformer.transformAll(Consumer {
-        it.printStackTrace()
+        throw it
     })
     writerStream.flush()
     writerStream.close()

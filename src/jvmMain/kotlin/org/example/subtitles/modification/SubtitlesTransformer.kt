@@ -13,7 +13,7 @@ import java.util.function.Consumer
  *
  * @param transformation  may transform the (mutable) SubtitleEntry directly
  */
-class SubtitlesTransformer(
+open class SubtitlesTransformer(
     private val reader: SubtitleReader,
     private val transformation: (SubtitleEntry) -> SubtitleEntry,
     private val writer: SubtitleWriter
