@@ -1,10 +1,14 @@
 package org.example.subtitles.cli
 
-import org.kohsuke.args4j.*
+import org.kohsuke.args4j.Argument
+import org.kohsuke.args4j.CmdLineException
+import org.kohsuke.args4j.CmdLineParser
+import org.kohsuke.args4j.Option
 import org.kohsuke.args4j.spi.SubCommand
 import org.kohsuke.args4j.spi.SubCommandHandler
 import org.kohsuke.args4j.spi.SubCommands
 import java.io.File
+import java.io.PrintStream
 import java.util.*
 
 
@@ -33,12 +37,7 @@ fun main(args: Array<String>) {
         }
 
     } catch (e: CmdLineException) {
-        System.err.println(e.message)
-//        System.err.println("java -jar myprogram.jar [...] arguments...")
-        parser.printUsage(System.err)
-        parser.printExample(OptionHandlerFilter.ALL)
-        parser.printExample(OptionHandlerFilter.REQUIRED)
-        return
+        printErrorAndUsage(parser, System.err, e)
     }
 }
 
@@ -81,10 +80,44 @@ class ArgOptions {
 class MainCommand {
     @Argument(handler = SubCommandHandler::class)
     @SubCommands(
-        SubCommand(name = "commandWithOptions", impl = MyOptions::class),
+        SubCommand(name = Companion.OPTION_COMMAND_NAME, impl = MyOptions::class),
         SubCommand(
-            name = "commandWithArgs", impl = ArgOptions::class
+            name = Companion.ARGS_COMMAND_NAME, impl = ArgOptions::class
         )
     )
     var cmd: Any? = null
+}
+
+private fun printErrorAndUsage(
+    parser: CmdLineParser,
+    printStream: PrintStream,
+    e: CmdLineException
+) {
+    printStream.print("Error: ")
+    printStream.println(e.message)
+    printStream.print("Usage: ")
+    parser.printSingleLineUsage(printStream)
+    // seems to do nothing:
+    // parser.printUsage(printStream)
+    printStream.println()
+
+    val tempParserOptions = CmdLineParser(MyOptions())
+    printStream.println("Usage for '${Companion.OPTION_COMMAND_NAME}'")
+    tempParserOptions.printUsage(printStream)
+    // seems to do nothing:
+    // tempParserOptions.printExample(OptionHandlerFilter.ALL)
+    // tempParserOptions.printExample(OptionHandlerFilter.REQUIRED)
+
+    printStream.println()
+    val tempArgs = CmdLineParser(ArgOptions())
+    printStream.println("Usage for '${Companion.ARGS_COMMAND_NAME}'")
+    tempArgs.printUsage(printStream)
+    // seems to do nothing:
+    // tempArgs.printExample(OptionHandlerFilter.ALL)
+    // tempArgs.printExample(OptionHandlerFilter.REQUIRED)
+}
+
+object Companion {
+    const val OPTION_COMMAND_NAME = "commandWithOptions"
+    const val ARGS_COMMAND_NAME = "commandWithArgs"
 }
