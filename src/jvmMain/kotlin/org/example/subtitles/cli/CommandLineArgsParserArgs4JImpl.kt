@@ -1,7 +1,6 @@
 package org.example.subtitles.cli
 
 import org.kohsuke.args4j.Argument
-import org.kohsuke.args4j.CmdLineException
 import org.kohsuke.args4j.CmdLineParser
 import org.kohsuke.args4j.Option
 import org.kohsuke.args4j.spi.SubCommand
@@ -9,7 +8,6 @@ import org.kohsuke.args4j.spi.SubCommandHandler
 import org.kohsuke.args4j.spi.SubCommands
 import java.io.File
 import java.io.PrintStream
-import java.io.PrintWriter
 import java.time.Duration
 import java.time.LocalTime
 import java.util.*
@@ -19,17 +17,18 @@ class CommandLineArgsParserArgs4JImpl : ExtendedCommandLineArgsParser {
 
     override fun parseCommandLineParameters(
         args: Array<String>,
-        writer: PrintWriter
+        errorStream: PrintStream
     ): BasicCommandLineParams {
         val paramsList = ArrayList(args.asList())
         val cmdLineOptions = Args4JCommand()
         val parser = CmdLineParser(cmdLineOptions)
         try {
             parser.parseArgument(paramsList)
-        } catch (e: CmdLineException) {
-            printErrorAndUsage(parser, System.err, e)
+            return cmdLineOptions.command!!.toParams()
+        } catch (e: Exception) {
+            printErrorAndUsage(parser, errorStream, e)
+            throw IllegalArgumentException(e)
         }
-        return cmdLineOptions.command!!.toParams()
     }
 }
 
@@ -67,7 +66,13 @@ class StreamingOptions : AbstractOptions() {
     var startingOffset: LocalTime = LocalTime.of(0, 0)
 
 
-    override fun toParams() = StreamingCommandLineParams(inputFile!!, startingOffset)
+    override fun toParams(): BasicCommandLineParams {
+        val result = StreamingCommandLineParams(inputFile!!, startingOffset)
+        if (!inputFile!!.exists()) {
+            throw IllegalArgumentException("Input file must exist")
+        }
+        return result
+    }
 }
 
 
@@ -101,7 +106,21 @@ class ModificationOptions : AbstractOptions() {
     )
     var outputFile: File? = null
 
-    override fun toParams() = ModificationCommandLineParams(inputFile!!, duration!!, outputFile!!)
+    override fun toParams(): BasicCommandLineParams {
+        val result = ModificationCommandLineParams(inputFile!!, duration!!, outputFile!!)
+
+        if (!inputFile!!.exists()) {
+            throw IllegalArgumentException("Input file must exist")
+        }
+        if (outputFile!!.exists()) {
+            throw IllegalArgumentException("Output file must not exist")
+        }
+
+        // I found no other way to check if the path is valid
+        outputFile!!.createNewFile()
+        outputFile!!.delete()
+        return result
+    }
 }
 
 

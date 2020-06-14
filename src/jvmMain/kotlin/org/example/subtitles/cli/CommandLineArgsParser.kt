@@ -1,6 +1,7 @@
 package org.example.subtitles.cli
 
 import java.io.File
+import java.io.PrintStream
 import java.io.PrintWriter
 import java.time.Duration
 import java.time.LocalTime
@@ -22,5 +23,5 @@ interface CommandLineArgsParser {
 }
 
 interface ExtendedCommandLineArgsParser {
-    fun parseCommandLineParameters(args: Array<String>, writer: PrintWriter): BasicCommandLineParams
+    fun parseCommandLineParameters(args: Array<String>, errorStream: PrintStream): BasicCommandLineParams
 }
