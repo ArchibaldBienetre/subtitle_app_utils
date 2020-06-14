@@ -35,8 +35,11 @@ class SimpleCliTest {
         val mockParams = listOf("").toTypedArray()
         val hardExitCalled = AtomicBoolean(false)
         val parser = object : CommandLineArgsParser {
-            override fun parseCommandLineParameters(args: Array<String>, writer: PrintWriter): CommandLineParams {
-                return CommandLineParams(File(validFilePath), LocalTime.of(0, 0))
+            override fun parseCommandLineParameters(
+                args: Array<String>,
+                writer: PrintWriter
+            ): StreamingCommandLineParams {
+                return StreamingCommandLineParams(File(validFilePath), LocalTime.of(0, 0))
             }
 
         }
@@ -70,7 +73,10 @@ class SimpleCliTest {
         val mockParams = listOf("").toTypedArray()
         val hardExitCalled = AtomicBoolean(false)
         val throwingParser = object : CommandLineArgsParser {
-            override fun parseCommandLineParameters(args: Array<String>, writer: PrintWriter): CommandLineParams {
+            override fun parseCommandLineParameters(
+                args: Array<String>,
+                writer: PrintWriter
+            ): StreamingCommandLineParams {
                 throw IllegalArgumentException("test exception")
             }
 

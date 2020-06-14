@@ -46,6 +46,7 @@ kotlin.sourceSets.named("jvmMain") {
 
         // CLI:
         implementation("commons-cli:commons-cli:1.4")
+        implementation("args4j:args4j:2.33")
     }
 
 }
@@ -82,7 +83,14 @@ kotlin.sourceSets.named("linuxTest") {
 // and https://docs.gradle.org/6.4/userguide/working_with_files.html#sec:creating_uber_jar_example
 tasks.named<Jar>("jvmJar") {
     manifest {
-        attributes(mapOf(Pair("Main-Class", "org.example.subtitles.cli.SimpleCliKt")))
+        attributes(
+            // https://docs.oracle.com/javase/6/docs/technotes/guides/jar/jar.html#JAR%20Manifest
+            // https://docs.oracle.com/javase/6/docs/technotes/guides/extensions/versioning.html
+            mapOf(
+                Pair("Main-Class", "org.example.subtitles.cli.Args4JCliKt"),
+                Pair("Implementation-Version", project.version)
+            )
+        )
     }
 
     from({
@@ -137,8 +145,15 @@ val jacocoTestCoverageVerification =
                 excludes = listOf(
                     "*.DefaultImpls", "*.Companion", "*.Factory", "*.1",
                     "org.example.subtitles.modification.SubtitlesTransformer",
+                    "org.example.subtitles.cli.CommandLineArgsParserApacheCommonsImpl",
+                    "org.example.subtitles.cli.CommandLineArgsParser",
+                    "org.example.subtitles.cli.Args4JCliKt",
                     "org.example.subtitles.cli.SimpleCliKt",
-                    "org.example.subtitles.cli.TimedSubtitlePrinter"
+                    "org.example.subtitles.cli.TimedSubtitlePrinter",
+                    "org.example.subtitles.cli.Args4JCommand",
+                    "org.example.subtitles.cli.BasicCommandLineParams",
+                    "org.example.subtitles.cli.StreamingOptions",
+                    "org.example.subtitles.cli.ModificationOptions"
                 )
 
                 includes = listOf("org.example.*")
@@ -151,10 +166,25 @@ val jacocoTestCoverageVerification =
             // ## the following have been covered by tests, but test coverage is not properly recognized ## //
             rule {
                 element = "CLASS"
-                includes = listOf("org.example.subtitles.modification.SubtitlesTransformer", "*.Factory")
+                includes = listOf(
+                    "*.Factory",
+                    "org.example.subtitles.modification.SubtitlesTransformer",
+                    "org.example.subtitles.cli.Args4JCliKt" // 0.84
+                )
 
                 limit {
                     minimum = "0.83".toBigDecimal()
+                }
+            }
+            rule {
+                element = "CLASS"
+                includes = listOf(
+                    "org.example.subtitles.cli.BasicCommandLineParams",
+                    "org.example.subtitles.cli.SimpleCliKt" // 0.77
+                )
+
+                limit {
+                    minimum = "0.76".toBigDecimal()
                 }
             }
             rule {
@@ -170,21 +200,35 @@ val jacocoTestCoverageVerification =
             rule {
                 element = "CLASS"
                 includes = listOf(
-                    "org.example.subtitles.cli.SimpleCliKt"
+                    "org.example.subtitles.cli.TimedSubtitlePrinter",
+                    "org.example.subtitles.cli.ModificationOptions"// 0.70
                 )
 
                 limit {
-                    minimum = "0.77".toBigDecimal()
+                    minimum = "0.69".toBigDecimal()
+
                 }
             }
             rule {
                 element = "CLASS"
                 includes = listOf(
-                    "org.example.subtitles.cli.TimedSubtitlePrinter"
+                    "org.example.subtitles.cli.StreamingOptions"
                 )
 
                 limit {
-                    minimum = "0.69".toBigDecimal()
+                    minimum = "0.66".toBigDecimal()
+
+                }
+            }
+            rule {
+                element = "CLASS"
+                includes = listOf(
+                    "org.example.subtitles.cli.Args4JCommand"
+                )
+
+                limit {
+                    minimum = "0.60".toBigDecimal()
+
                 }
             }
         }
