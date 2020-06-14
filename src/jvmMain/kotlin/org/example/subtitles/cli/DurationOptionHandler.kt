@@ -11,7 +11,7 @@ class DurationOptionHandler(parser: CmdLineParser, option: OptionDef, setter: Se
     OneArgumentOptionHandler<Duration>(parser, option, setter) {
 
     override fun parse(rawArgument: String): Duration? {
-        val argument = rawArgument.strip()
+        val argument = rawArgument.trim()
         val negative = argument.startsWith("-")
         val argumentToProcess = if (negative) argument.substring(1) else argument
         val parsedLocalTime = LocalTime.parse(argumentToProcess)
