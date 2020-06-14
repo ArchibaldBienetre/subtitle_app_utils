@@ -10,7 +10,7 @@ import java.time.LocalTime
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class Args4JCommandLineArgsParserImplTest {
+class CommandLineArgsParserArgs4JImplTest {
 
     private val validFilePath = "src/jvmTest/resources/test_subtitles_start_00-00-00.srt"
     private val validOutputFilePath = "src/jvmTest/resources/nonExistentOutputFile.srt"
@@ -18,7 +18,7 @@ class Args4JCommandLineArgsParserImplTest {
     private val nonExistentFilePath = "src/jvmTest/resources/noSuchFile.srt"
 
 
-    val sut = Args4JCommandLineArgsParserImpl()
+    val sut = CommandLineArgsParserArgs4JImpl()
     lateinit var out: ByteArrayOutputStream
     lateinit var writer: PrintWriter
 

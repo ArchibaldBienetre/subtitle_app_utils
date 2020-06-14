@@ -15,7 +15,7 @@ import java.time.LocalTime
 import java.util.*
 
 
-class Args4JCommandLineArgsParserImpl : ExtendedCommandLineArgsParser {
+class CommandLineArgsParserArgs4JImpl : ExtendedCommandLineArgsParser {
 
     override fun parseCommandLineParameters(
         args: Array<String>,
