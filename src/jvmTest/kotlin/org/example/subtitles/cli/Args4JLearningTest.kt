@@ -1,9 +1,9 @@
 package org.example.subtitles.cli
 
-import org.kohsuke.args4j.Argument
-import org.kohsuke.args4j.CmdLineException
-import org.kohsuke.args4j.CmdLineParser
-import org.kohsuke.args4j.Option
+import org.kohsuke.args4j.*
+import org.kohsuke.args4j.spi.SubCommand
+import org.kohsuke.args4j.spi.SubCommandHandler
+import org.kohsuke.args4j.spi.SubCommands
 import java.io.File
 import java.util.*
 
@@ -13,20 +13,31 @@ import java.util.*
 
 fun main(args: Array<String>) {
     val paramsList = ArrayList(args.asList())
-    val cmdLineOptions: MyOptions = MyOptions()
-    val parser: CmdLineParser = CmdLineParser(cmdLineOptions)
+    val cmdLineOptions = MainCommand()
+    val parser = CmdLineParser(cmdLineOptions)
     try {
         parser.parseArgument(paramsList)
-        println("recursive: ${cmdLineOptions.recursive}")
-        println("num: ${cmdLineOptions.num}")
-        println("out: ${cmdLineOptions.out}")
-        println("out.exists: ${cmdLineOptions.out?.exists()}")
-        println("str: ${cmdLineOptions.str}")
-        println("Other: ${cmdLineOptions.otherArguments}")
+        println("parsed: ${cmdLineOptions.cmd}")
+        if (cmdLineOptions.cmd is MyOptions?) {
+            println("### MyOptions")
+            println("recursive: ${(cmdLineOptions.cmd as MyOptions).recursive}")
+            println("num: ${(cmdLineOptions.cmd as MyOptions).num}")
+            println("out: ${(cmdLineOptions.cmd as MyOptions).out}")
+            println("out.exists: ${(cmdLineOptions.cmd as MyOptions).out?.exists()}")
+            println("str: ${(cmdLineOptions.cmd as MyOptions).str}")
+            println("otherArguments: ${(cmdLineOptions.cmd as MyOptions).otherArguments}")
+        } else if (cmdLineOptions.cmd is ArgOptions) {
+            println("### ArgOptions")
+            println("mainArgument: ${(cmdLineOptions.cmd as ArgOptions).mainArgument}")
+            println("otherArguments: ${(cmdLineOptions.cmd as ArgOptions).otherArguments}")
+        }
+
     } catch (e: CmdLineException) {
         System.err.println(e.message)
-        System.err.println("java -jar myprogram.jar [options...] arguments...")
+//        System.err.println("java -jar myprogram.jar [...] arguments...")
         parser.printUsage(System.err)
+        parser.printExample(OptionHandlerFilter.ALL)
+        parser.printExample(OptionHandlerFilter.REQUIRED)
         return
     }
 }
@@ -51,7 +62,29 @@ class MyOptions {
     )
     var num: Int? = null
 
-    // receives other command line parameters than options
+    // all that have no "-" in front
     @Argument
     var otherArguments: List<String> = ArrayList()
+}
+
+
+class ArgOptions {
+
+    @Argument(multiValued = false, index = 0)
+    var mainArgument: String = ""
+
+    @Argument(multiValued = true, index = 1)
+    var otherArguments: List<String> = ArrayList()
+}
+
+
+class MainCommand {
+    @Argument(handler = SubCommandHandler::class)
+    @SubCommands(
+        SubCommand(name = "commandWithOptions", impl = MyOptions::class),
+        SubCommand(
+            name = "commandWithArgs", impl = ArgOptions::class
+        )
+    )
+    var cmd: Any? = null
 }
