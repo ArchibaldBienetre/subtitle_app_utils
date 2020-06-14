@@ -55,7 +55,7 @@ class MyOptions {
     @Option(
         name = "-n",
         required = true,
-        aliases = ["number"],
+        aliases = ["--number"],
         metaVar = "NUM",
         usage = "usage can have new lines in it\n and also it can be long"
     )
